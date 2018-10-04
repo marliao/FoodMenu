@@ -127,7 +127,6 @@ public class vep_MenuActivity extends Activity {
             }
         });
 
-
         //设置滚动事件
         green_name.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

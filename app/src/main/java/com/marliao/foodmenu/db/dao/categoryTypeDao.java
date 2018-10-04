@@ -99,4 +99,5 @@ public class categoryTypeDao {
         return type;
     }
 
+
 }

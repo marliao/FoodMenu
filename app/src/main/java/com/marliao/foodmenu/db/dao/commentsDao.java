@@ -83,6 +83,7 @@ public class commentsDao {
         sdb.close();
         return (int) flag;
     };
+
     public List<Comment> findAll(Integer menuid){
         List<Comment> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();

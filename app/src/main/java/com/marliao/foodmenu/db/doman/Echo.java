@@ -7,6 +7,7 @@ public class Echo {
     private int isColleck;
 
 
+
     public int getMenuid() {
         return menuid;
     }

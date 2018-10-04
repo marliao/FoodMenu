@@ -50,6 +50,7 @@ public class EchoDao {
         db.close();
         return rs;
     }
+
     public int findMenuidNotLike(Integer menuid){
         SQLiteDatabase db = sdb.getWritableDatabase();
         Cursor cursor = db.query("echo", new String[]{"isNotLike"}, "menuid=?", new String[]{menuid + ""}, null, null, null);
