@@ -195,7 +195,6 @@ public class three_Activity extends Activity {
             }
         }
     }
-
     /**
      * 第四个页面的数据
      */

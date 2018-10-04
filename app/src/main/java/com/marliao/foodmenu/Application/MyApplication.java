@@ -11,6 +11,7 @@ import com.marliao.foodmenu.db.doman.Sort;
 
 public class MyApplication extends Application {
 
+
     public static final String pathMenuTypes="http://192.168.1.101:8080/menu/types";
     public static final String pathMenuMenus="http://192.168.1.101:8080/menu/menus";
     public static final String pathMenuDetail="http://192.168.1.101:8080/menu/menuDetail";
