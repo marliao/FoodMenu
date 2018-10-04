@@ -88,6 +88,7 @@ public class EchoDao {
         db.close();
         return rs;
     }
+
     public List<Echo> findAll(){
         List<Echo> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();

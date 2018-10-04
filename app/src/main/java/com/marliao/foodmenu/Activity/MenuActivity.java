@@ -88,6 +88,7 @@ public class MenuActivity extends AppCompatActivity {
                 prepareData();
             }
         });
+
         //点击实现更多功能
         bt_function.setOnClickListener(new View.OnClickListener() {
             @Override
