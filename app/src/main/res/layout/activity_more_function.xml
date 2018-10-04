@@ -1,21 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/help"
-    android:orientation="vertical"
     tools:context=".Activity.MoreFunctionActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
         android:text="更多功能"
         android:textSize="50sp" />
-    <TextView
+
+   <TextView
+        android:id="@+id/tv_user_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="使用帮助"/>
-</LinearLayout>
+       android:layout_marginTop="100dp"
+        android:padding="20dp"
+        android:text="使用帮助"
+        android:textSize="40sp" />
+
+     <TextView
+         android:id="@+id/tv_create_man"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="200dp"
+         android:padding="20dp"
+         android:text="开发人员信息"
+         android:textSize="40sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:orientation="horizontal"
+        android:padding="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系方式："
+            android:textSize="40sp" />
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="110"
+            android:textColor="#00f"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tv_more_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:text="返回"
+        android:textSize="40sp"/>
+
+
+</RelativeLayout>
