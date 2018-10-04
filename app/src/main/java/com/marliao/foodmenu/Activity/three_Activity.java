@@ -21,10 +21,12 @@ import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SpUtil;
+import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.commentsDao;
 import com.marliao.foodmenu.db.dao.stepDao;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.Echo;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Steps;
@@ -53,12 +55,17 @@ public class three_Activity extends Activity {
     private ImageView iv_collect;
     private TextView tv_title;
     private commentsDao mCommentsDao;
+    private EchoDao echoDao;
+    private int mMenuid;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three_menu);
+        //初始化echo数据
+        initEcho();
+        //初始化UI数据
         intinUI();
         //制作步骤
         initDate();
@@ -68,6 +75,15 @@ public class three_Activity extends Activity {
         initCollect();
         //设置标题
         initTilte();
+
+    }
+
+    private void initEcho() {
+        echoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
+        //获取第二页给的menu对象
+        menu = MyApplication.getMenuDetail().getMenu();
+        mMenuid = menu.getMenuid();
+        echoDao.insertMenuid(mMenuid);
     }
 
     private void initTilte() {
@@ -78,8 +94,7 @@ public class three_Activity extends Activity {
 
     private void initCollect() {
         //从sp中获取value值用作回显
-        boolean flag = SpUtil.getBoolean(getApplicationContext(), MyApplication.KEY_COLLECT, false);
-        if(flag){
+        if(echoDao.findMenuidColleck(mMenuid) == 1){
             iv_collect.setBackgroundResource(R.drawable.collect);
         }else{
             iv_collect.setBackgroundResource(R.drawable.discollect);
@@ -87,13 +102,13 @@ public class three_Activity extends Activity {
         iv_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean echo = SpUtil.getBoolean(getApplicationContext(), MyApplication.KEY_COLLECT, false);
-                if(!echo){
+                if(echoDao.findMenuidColleck(mMenuid) == 0){
                     iv_collect.setBackgroundResource(R.drawable.collect);
+                    echoDao.updateMenuidColleck(mMenuid,1);
                 }else{
                     iv_collect.setBackgroundResource(R.drawable.discollect);
+                    echoDao.updateMenuidColleck(mMenuid,0);
                 }
-                SpUtil.putBoolean(getApplicationContext(),MyApplication.KEY_COLLECT,!echo);
             }
         });
     }
@@ -115,42 +130,44 @@ public class three_Activity extends Activity {
                 @Override
                 public void onClick(View v) {
                     //当前页面的数据
-                    if (MyApplication.like) {
+                    if (echoDao.findMenuidLike(mMenuid)==1) {
                         iv_like.setBackgroundResource(R.drawable.dislike);
                         menu.setLikes(menu.getLikes()-1);
+                        echoDao.updateMenuidLike(mMenuid,0);
                         MyApplication.showToast("喜欢人数:"+menu.getLikes());
                     }else {
                         iv_like.setBackgroundResource(R.drawable.like);
                         //判断不喜欢的状态，为true变成false
-                        if(MyApplication.dislike){
+                        if(echoDao.findMenuidNotLike(mMenuid) == 1){
                             iv_dislike.setBackgroundResource(R.drawable.dislike);
-                            MyApplication.dislike = !MyApplication.dislike;
+                            echoDao.updateMenuidNotLike(mMenuid,0);
                             menu.setNotlikes(menu.getNotlikes()-1);
                         }
                         menu.setLikes(menu.getLikes()+1);
+                        echoDao.updateMenuidLike(mMenuid,1);
                         MyApplication.showToast("喜欢人数:"+menu.getLikes());
                     }
-                    MyApplication.like = !MyApplication.like;
                 }
             });
             ll_dislike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (MyApplication.dislike) {
+                    if (echoDao.findMenuidNotLike(mMenuid) == 1) {
                         iv_dislike.setBackgroundResource(R.drawable.dislike);
                         menu.setNotlikes(menu.getNotlikes()-1);
+                        echoDao.updateMenuidNotLike(mMenuid,0);
                         MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
                     }else {
                         iv_dislike.setBackgroundResource(R.drawable.like);
-                        if(MyApplication.like){
+                        if(echoDao.findMenuidLike(mMenuid) == 1){
                             iv_like.setBackgroundResource(R.drawable.dislike);
-                            MyApplication.like = !MyApplication.like;
+                            echoDao.updateMenuidLike(mMenuid ,0);
                             menu.setLikes(menu.getLikes()-1);
                         }
                         menu.setNotlikes(menu.getNotlikes()+1);
+                        echoDao.updateMenuidNotLike(mMenuid,1);
                         MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
                     }
-                    MyApplication.dislike = !MyApplication.dislike;
                 }
             });
         if (MyApplication.like) {
@@ -186,8 +203,6 @@ public class three_Activity extends Activity {
     private void initCommentsData() {
         if(IsInternet.isNetworkAvalible(getApplicationContext())){
             new Thread() {
-
-
                 @Override
                 public void run() {
                     try {
@@ -209,7 +224,7 @@ public class three_Activity extends Activity {
             new Thread(){
                 @Override
                 public void run() {
-                    List<Comment> commentsList = mCommentsDao.findAll();
+                    List<Comment> commentsList = mCommentsDao.findAll(mMenuid);
                     Comments comments = new Comments();
                     comments.setCommentList(commentsList);
                     MyApplication.setComments(comments);
@@ -229,7 +244,6 @@ public class three_Activity extends Activity {
     private void intinUI() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         dish_Img = (ImageView) findViewById(R.id.dish_Img);
-        menu = MyApplication.getMenuDetail().getMenu();
         dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(),three_Activity.this));
         dish_name = (TextView) findViewById(R.id.dish_name);
         dish_name.setText(menu.getMenuname());
@@ -247,11 +261,11 @@ public class three_Activity extends Activity {
         ll_dislike = (LinearLayout) findViewById(R.id.ll_dislike);
         iv_dislike = (ImageView) findViewById(R.id.iv_dislike);
 
-        if (MyApplication.like) {
+        if (echoDao.findMenuidLike(mMenuid) == 1) {
             iv_like.setBackgroundResource(R.drawable.like);
             iv_dislike.setBackgroundResource(R.drawable.dislike);
         }
-        if (MyApplication.dislike){
+        if (echoDao.findMenuidNotLike(mMenuid) == 1){
             iv_like.setBackgroundResource(R.drawable.dislike);
             iv_dislike.setBackgroundResource(R.drawable.like);
         }

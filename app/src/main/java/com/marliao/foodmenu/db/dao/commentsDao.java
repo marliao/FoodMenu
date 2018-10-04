@@ -83,10 +83,10 @@ public class commentsDao {
         sdb.close();
         return (int) flag;
     };
-    public List<Comment> findAll(){
+    public List<Comment> findAll(Integer menuid){
         List<Comment> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
-        Cursor cursor = db.query("comments", null, null, null, null, null, null);
+        Cursor cursor = db.query("comments", null, "menuid=?", new String[]{menuid+""}, null, null, null);
         while(cursor.moveToNext()){
             if(list == null)list = new ArrayList<Comment>();
             Comment comment = new Comment();

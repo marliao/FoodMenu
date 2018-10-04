@@ -110,9 +110,9 @@ public class vep_MenuActivity extends Activity {
                    new Thread(){
                        @Override
                        public void run() {
-                           stepList = mStepDao.findAll();
                            //获取当前点击的menu数据
                            Menu menu = menuList.get(position);
+                           stepList = mStepDao.findAll(menu.getMenuid());
                            //创建一个MenuDetail对象存入数据
                            MenuDetail detail = new MenuDetail();
                            detail.setMenu(menu);

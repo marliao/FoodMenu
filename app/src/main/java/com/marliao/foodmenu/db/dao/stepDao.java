@@ -73,10 +73,10 @@ public class stepDao {
         sdb.close();
         return (int) flag;
     };
-    public List<Steps> findAll(){
+    public List<Steps> findAll(Integer menuid){
         List<Steps> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
-        Cursor cursor = db.query("step", null, null, null, null, null, null);
+        Cursor cursor = db.query("step", null, "menuid=?", new String[]{menuid+""}, null, null, null);
         while(cursor.moveToNext()){
             if(list == null)list = new ArrayList<Steps>();
             Steps steps = new Steps();
