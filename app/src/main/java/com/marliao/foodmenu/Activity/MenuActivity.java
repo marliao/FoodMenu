@@ -58,7 +58,6 @@ public class MenuActivity extends AppCompatActivity {
             super.handleMessage(msg);
         }
     };
-    private static int number=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +112,6 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        number=1;
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuTypes, null);
                         Sort resolveSort = ResolveJson.resolveSort(httpResult);
                         MyApplication.setSort(resolveSort);
@@ -151,15 +149,20 @@ public class MenuActivity extends AppCompatActivity {
         menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //判断是否有网络连接
+
+                // 判断是否有网络连接
                 if(mNetworkAvalible){
-                    SpUtil.putBoolean(getApplicationContext(),"NETPAGETWO",mNetworkAvalible );
+                    SpUtil.putBoolean(getApplicationContext(),"NETPAGE"+position,mNetworkAvalible );
                     getMenuList(mTypesList.get(position).getTypeid());
-                }else if(SpUtil.getBoolean(getApplicationContext(),"NETPAGETWO",false)){
-                    getMenuList(mTypesList.get(position).getTypeid());
+
+                }else if(SpUtil.getBoolean(getApplicationContext(),"NETPAGE"+position,false)){
+                    Message msg = new Message();
+                    msg.what = MENULIST;
+                    mHandler.sendMessage(msg);
                 }else {
                     MyApplication.showToast("无网络连接，请稍后重试!");
                 }
+
             }
         });
     }
