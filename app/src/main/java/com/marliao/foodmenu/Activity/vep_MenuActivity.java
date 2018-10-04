@@ -72,6 +72,11 @@ public class vep_MenuActivity extends Activity {
     // 通过id给标题进行设置
     private void InitTitle() {
         tv_title = (TextView) findViewById(R.id.tv_title);
+        String result = MyApplication.getFoodMenu().getResult();
+        if(result.equals("cellect")){
+            tv_title.setText("收藏");
+            return;
+        }
         int typeid = menuList.get(0).getTypeid();
         List<Types> typesList = MyApplication.getSort().getTypesList();
         String typename = typesList.get(typeid - 1).getTypename();

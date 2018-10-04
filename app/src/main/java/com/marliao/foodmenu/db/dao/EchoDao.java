@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.marliao.foodmenu.db.doman.Echo;
 import com.marliao.foodmenu.db.sqliteDatebase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EchoDao {
     private sqliteDatebase sdb = null;
     private EchoDao(Context context){
@@ -85,6 +88,17 @@ public class EchoDao {
         db.close();
         return rs;
     }
-
-
+    public List<Echo> findAll(){
+        List<Echo> list = null;
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        Cursor cursor = db.query("echo", null, null, null, null, null, null);
+        while (cursor.moveToNext()){
+            if(list == null) list = new ArrayList<Echo>();
+            Echo echo = new Echo(cursor.getInt(0),cursor.getInt(1),
+                    cursor.getInt(2),cursor.getInt(3));
+            list.add(echo);
+        }
+        db.close();
+        return list;
+    }
 }

@@ -6,7 +6,15 @@ public class Echo {
     private int NotisLike;
     private int isColleck;
 
+    public Echo() {
+    }
 
+    public Echo(int menuid, int isLike, int notisLike, int isColleck) {
+        this.menuid = menuid;
+        this.isLike = isLike;
+        NotisLike = notisLike;
+        this.isColleck = isColleck;
+    }
 
     public int getMenuid() {
         return menuid;

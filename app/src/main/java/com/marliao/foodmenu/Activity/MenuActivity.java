@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,8 +25,10 @@ import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
+import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.categoryTypeDao;
 import com.marliao.foodmenu.db.dao.stepDao;
+import com.marliao.foodmenu.db.doman.Echo;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Sort;
@@ -33,9 +36,13 @@ import com.marliao.foodmenu.db.doman.Types;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.marliao.foodmenu.db.dao.menuDao;
+
+import static com.marliao.foodmenu.R.id.bt_function;
+
 public class MenuActivity extends AppCompatActivity {
 
     private static final int DATA = 100;
@@ -58,6 +65,8 @@ public class MenuActivity extends AppCompatActivity {
             super.handleMessage(msg);
         }
     };
+    private Button bt_cellect;
+    private Button bt_function;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,56 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         initUI();
         initData();
+        //扩展点击功能
+        initCellect();
+    }
+
+    private void initCellect() {
+        bt_cellect = (Button) findViewById(R.id.bt_cellect);
+        bt_function = (Button) findViewById(R.id.bt_function);
+        //点击跳转搜藏页面
+        bt_cellect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prepareData();
+            }
+        });
+        //点击实现更多功能
+        bt_function.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),MoreFunctionActivity.class));
+            }
+        });
+    }
+
+    //准备收藏数据
+    private void prepareData() {
+        new Thread(){
+            @Override
+            public void run() {
+                EchoDao echoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
+                menuDao menuD = menuDao.getInstanceMenu(getApplicationContext());
+                List<Menu> menuList = new ArrayList<Menu>();
+                List<Echo> echoList = echoDao.findAll();
+                for(Echo echo : echoList){
+                    if(echo.getIsColleck() == 1){
+                        Menu menu = menuD.findByID(echo.getMenuid());
+                        menuList.add(menu);
+                    }
+                }
+                System.out.println(menuList.toString());
+                //获取foodmenu对象存入MyApplication 中
+                FoodMenu foodmenu = new FoodMenu();
+                foodmenu.setMenuList(menuList);
+                foodmenu.setResult("cellect");
+                MyApplication.setFoodMenu(foodmenu);
+                //发送消息进行页面跳转
+                Message msg = Message.obtain();
+                msg.what = MENULIST;
+                mHandler.sendMessage(msg);
+            }
+        }.start();
     }
 
     /**
