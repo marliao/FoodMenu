@@ -92,6 +92,30 @@ public class three_Activity extends Activity {
                     MyApplication.dislike = !MyApplication.dislike;
                 }
             });
+        if (MyApplication.like) {
+            try {
+                String jsonResult = GenerateJson.generateSupport(mMenuDetail.getMenu().getMenuid(), "yes");
+                String httpResult = HttpUtils.doPost(MyApplication.pathMenuSupport, jsonResult);
+                String result = ResolveJson.resolveResponseComment(httpResult);
+                if (result.equals("ok")) {
+                    MyApplication.showToast("评论成功！");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (MyApplication.dislike){
+            try {
+                String jsonResult = GenerateJson.generateSupport(mMenuDetail.getMenu().getMenuid(), "no");
+                String httpResult = HttpUtils.doPost(MyApplication.pathMenuSupport, jsonResult);
+                String result = ResolveJson.resolveResponseComment(httpResult);
+                if (result.equals("ok")) {
+                    MyApplication.showToast("评论成功！");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -122,7 +146,7 @@ public class three_Activity extends Activity {
                 R.drawable.home_trojan, R.drawable.home_trojan,
                 R.drawable.home_trojan};
         dishTime = new String[]{"10min", "10min", "10min", "10min", "10min", "10min",};
-        dish_step.setAdapter(new MyAdapter());
+//        dish_step.setAdapter(new MyAdapter());
 
     }
 
@@ -139,6 +163,13 @@ public class three_Activity extends Activity {
         iv_like = (ImageView) findViewById(R.id.iv_like);
         ll_dislike = (LinearLayout) findViewById(R.id.ll_dislike);
         iv_dislike = (ImageView) findViewById(R.id.iv_dislike);
+
+        if (MyApplication.like) {
+            iv_like.setBackgroundResource(R.drawable.like);
+        }
+        if (MyApplication.dislike) {
+            iv_like.setBackgroundResource(R.drawable.like);
+        }
 
     }
 
