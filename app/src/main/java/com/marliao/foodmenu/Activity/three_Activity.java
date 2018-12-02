@@ -20,6 +20,10 @@ public class three_Activity extends Activity {
     private TextView dish_brief;
     private TextView dish_list;
     private ListView dish_step;
+    private int[] dishImg;
+    private String[] stepCourse;
+    private String[] stepName;
+    private String[] time;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -34,13 +38,16 @@ public class three_Activity extends Activity {
     }
 
     private void initDate() {
-        String[] stepName=new String[]{"步骤一","步骤一","步骤一","步骤一","步骤一"};
-        String[] stepCourse=new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
+        stepName = new String[]{"步骤一","步骤一","步骤一","步骤一","步骤一"};
+        stepCourse = new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",};
-        int[] dishImg= new int[]{};
+        dishImg = new int[]{R.drawable.home_trojan,R.drawable.home_trojan,
+                R.drawable.home_trojan,R.drawable.home_trojan,
+                R.drawable.home_trojan};
+        time = new String[]{"10min","10min","10min","10min","10min","10min",};
         dish_step.setAdapter(new MyAdapter());
 
     }
@@ -55,22 +62,27 @@ public class three_Activity extends Activity {
     private class MyAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return 0;
+            return stepName.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return stepName[position];
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            View view=View.inflate(three_Activity.this,R.layout.setting_activity_view,null);
+            TextView stepTittle = (TextView) view.findViewById(R.id.text1_tittle);
+            TextView stepTittle2 = (TextView) view.findViewById(R.id.text2_tittle);
+            ImageView step_Img = (ImageView) findViewById(R.id.step_Img);
+            TextView time = (TextView) findViewById(R.id.time);
+            return view;
         }
     }
 }
