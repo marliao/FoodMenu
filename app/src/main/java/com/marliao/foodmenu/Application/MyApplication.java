@@ -2,7 +2,6 @@ package com.marliao.foodmenu.Application;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import com.marliao.foodmenu.db.doman.Comments;
@@ -20,7 +19,8 @@ public class MyApplication extends Application {
     public static final String pathMenuPostComment="http://192.168.1.101:8080/menu/postComment";
     public static final String Http="http://192.168.1.101:8080/menu/";
 
-    public static Drawable drawable;
+    public static boolean like=false;
+    public static boolean dislike=false;
 
     private static Comments comments;
     private static FoodMenu foodMenu;
