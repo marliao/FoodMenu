@@ -24,7 +24,6 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        testTools();
         intiUI();
         intiDate();
     }
@@ -62,10 +61,6 @@ public class MenuActivity extends AppCompatActivity {
         menu_one = (GridView) findViewById(R.id.menu_one);
     }
 
-    private void testTools() {
-
-    }
-
     private class MyAdapter extends BaseAdapter {
 
         @Override
@@ -86,12 +81,22 @@ public class MenuActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(getApplicationContext(), R.layout.menu_vep, null);
-            ImageView img = (ImageView) view.findViewById(R.id.img);
-            TextView Itext = (TextView) view.findViewById(R.id.Itext);
-            img.setBackgroundResource(img_mennu[position]);
-            Itext.setText(menu_name[position]);
-            return view;
+            ViewHolder holder = new ViewHolder();
+            if (convertView == null) {
+                convertView=View.inflate(MenuActivity.this,R.layout.activity_menu,null);
+                holder.img=convertView.findViewById(R.id.img);
+                holder.Itext=convertView.findViewById(R.id.Itext);
+                convertView.setTag(holder);
+            }else {
+                holder= (ViewHolder) convertView.getTag();
+            }
+            holder.img.setBackgroundResource(img_mennu[position]);
+            holder.Itext.setText(menu_name[position]);
+            return convertView;
         }
+    }
+    class ViewHolder{
+        ImageView img;
+        TextView Itext;
     }
 }
