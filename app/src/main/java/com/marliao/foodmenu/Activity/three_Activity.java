@@ -117,12 +117,7 @@ public class three_Activity extends Activity {
     private void initDate() {
         mMenuDetail = MyApplication.getMenuDetail();
 
-        stepName = new String[]{"步骤一", "步骤一", "步骤一", "步骤一", "步骤一"};
-        stepCourse = new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
-                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
-                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
-                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
-                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",};
+
         dishImg = new int[]{R.drawable.home_trojan, R.drawable.home_trojan,
                 R.drawable.home_trojan, R.drawable.home_trojan,
                 R.drawable.home_trojan};
