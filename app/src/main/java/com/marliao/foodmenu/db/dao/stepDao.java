@@ -100,4 +100,13 @@ public class stepDao {
         return false;
     }
 
+    public int selectIslike(Integer stepId){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        Cursor cursor = db.query("step", new String[]{"islike"}, "stepid=?", new String[]{stepId + ""},
+                null, null, null);
+        if(cursor.moveToNext()){
+            return cursor.getInt(0);
+        }
+        return 0;
+    }
 }
