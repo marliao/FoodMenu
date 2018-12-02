@@ -2,7 +2,6 @@ package com.marliao.foodmenu.Application;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import com.marliao.foodmenu.db.doman.Comments;
