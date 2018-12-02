@@ -1,9 +1,11 @@
 package com.marliao.foodmenu.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -33,7 +35,27 @@ public class MenuActivity extends AppCompatActivity {
                 R.drawable.home_trojan, R.drawable.home_trojan,
                 R.drawable.home_trojan, R.drawable.home_trojan,};
         menu_one.setAdapter(new MyAdapter());
-
+        menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case  0:
+                        Intent intent = new Intent(getApplicationContext(), vep_MenuActivity.class);
+                        startActivity(intent);
+                        break;
+                    case  1:
+                        break;
+                    case  2:
+                        break;
+                    case  3:
+                        break;
+                    case  4:
+                        break;
+                    case  5:
+                        break;
+                }
+            }
+        });
     }
 
     private void intiUI() {

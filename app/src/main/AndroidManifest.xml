@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activity.vep_MenuActivity"></activity>
+        <activity android:name=".Activity.three_Activity"></activity>
     </application>
 
 </manifest>

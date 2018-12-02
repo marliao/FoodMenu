@@ -56,6 +56,7 @@ public class vep_MenuActivity extends Activity {
                 switch (position) {
                     case  0:
                         Intent intent=new Intent(getApplicationContext(),three_Activity.class);
+                        startActivity(intent);
                         break;
                     case  1:
                         break;
