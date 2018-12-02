@@ -34,6 +34,7 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         intiUI();
         intiDate();
+
     }
 
     private void intiDate() {
