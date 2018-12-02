@@ -18,7 +18,11 @@ import android.widget.TextView;
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
+import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.Ptime;
+
+import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -27,6 +31,7 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView iv_food_image;
     private ListView lv_others_comments;
     private EditText et_your_comment;
+    private List<Comment> commentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +43,17 @@ public class CommentsActivity extends AppCompatActivity {
         initData();
         //发送评论
         sendComment();
+        //展示数据
+        initAdapter();
+    }
+
+    private void initAdapter() {
+        lv_others_comments.setAdapter(new MyAdapter());
     }
 
     private void initData() {
         Comments comments = MyApplication.getComments();
-        comments.getCommentList();
+        commentList = comments.getCommentList();
     }
 
     private void sendComment() {
@@ -72,12 +83,12 @@ public class CommentsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 0;
+            return commentList.size();
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public Comment getItem(int position) {
+            return commentList.get(position);
         }
 
         @Override
@@ -98,10 +109,21 @@ public class CommentsActivity extends AppCompatActivity {
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                holder.iv_comments_view.setBackgroundResource(R.mipmap.ic_launcher);
-                holder.tv_username.setText("未知的用户");
             }
-            return null;
+            holder.iv_comments_view.setBackgroundResource(R.mipmap.ic_launcher);
+            holder.tv_username.setText("未知的用户");
+            Ptime ptime = getItem(position).getPtime();
+            holder.tv_date.setText(ptime.getYear()+"年"+ptime.getMonth()+"月"+ptime.getDate()+"日");
+            int hours=Integer.parseInt(ptime.getHours());
+            String str=null;
+            if (hours > 12) {
+                str="AM";
+            }else {
+                str="PM";
+            }
+            holder.tv_time.setText(ptime.getHours()+":"+ptime.getMinutes()+str);
+            holder.tv_comments_content.setText("目前没有数据");
+            return convertView;
         }
     }
 
