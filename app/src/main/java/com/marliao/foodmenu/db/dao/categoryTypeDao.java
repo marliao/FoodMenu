@@ -33,6 +33,17 @@ public class categoryTypeDao {
         sdb.close();
         return (int) flag;
     };
+    public void insertTypeList(List<Types> list){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        for(Types type : list){
+            ContentValues values = new ContentValues();
+            values.put("typename",type.getTypename());
+            values.put("typepic",type.getTypepic());
+            values.put("description",type.getTypeid());
+            long flag = db.insert("type", null, values);
+        }
+        sdb.close();
+    };
     public int deleteType(Integer id){
         SQLiteDatabase db = sdb.getWritableDatabase();
         long flag = db.delete("type","typeid=?",new String[]{String.valueOf(id)});

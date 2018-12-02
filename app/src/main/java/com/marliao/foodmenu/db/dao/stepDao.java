@@ -35,6 +35,18 @@ public class stepDao {
         sdb.close();
         return (int) flag;
     };
+    public void insertStepList(List<Steps> list){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        for(Steps step: list){
+            ContentValues values = new ContentValues();
+            values.put("description",step.getDescription());
+            values.put("menuid",step.getMenuid());
+            values.put("pic",step.getPic());
+            values.put("islike",0);
+            long flag = db.insert("step", null, values);
+        }
+        sdb.close();
+    };
     public int deleteStep(Integer id){
         SQLiteDatabase db = sdb.getWritableDatabase();
         long flag = db.delete("step","stepid=?",new String[]{String.valueOf(id)});

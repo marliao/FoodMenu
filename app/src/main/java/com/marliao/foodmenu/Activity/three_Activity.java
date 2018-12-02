@@ -94,8 +94,8 @@ public class three_Activity extends Activity {
             View view=View.inflate(three_Activity.this,R.layout.setting_activity_view,null);
             TextView stepTittle = (TextView) view.findViewById(R.id.text1_tittle);
             TextView stepTittle2 = (TextView) view.findViewById(R.id.text2_tittle);
-            ImageView step_Img = (ImageView) findViewById(R.id.step_Img);
-            TextView time = (TextView) findViewById(R.id.time);
+            ImageView step_Img = (ImageView) view.findViewById(R.id.step_Img);
+            TextView time = (TextView) view.findViewById(R.id.time);
             stepTittle.setText(stepName[position]);
             stepTittle2.setText(stepCourse[position]);
             step_Img.setBackgroundResource(dishImg[position]);

@@ -38,6 +38,22 @@ public class menuDao {
         sdb.close();
         return (int) flag;
     };
+    public  void insertMenuList(List<Menu> list){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        for(Menu menu : list){
+            ContentValues values = new ContentValues();
+            values.put("menuname",menu.getMenuname());
+            values.put("spic",menu.getSpic());
+            values.put("assistmaterial",menu.getAssistmaterial());
+            values.put("notlikes",menu.getNotlikes());
+            values.put("abstracts",menu.getAbstracts());
+            values.put("mainmaterial",menu.getMainmaterial());
+            values.put("typeid",menu.getTypeid());
+            values.put("likes",menu.getLikes());
+            long flag = db.insert("menu", null, values);
+        }
+        sdb.close();
+    };
     public int deleteMenu(Integer id){
         SQLiteDatabase db = sdb.getWritableDatabase();
         long flag = db.delete("menu","menuid=?",new String[]{String.valueOf(id)});
@@ -85,7 +101,7 @@ public class menuDao {
     public List<Menu> findLimit(Integer menuid){
         List<Menu> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from menu limit ?,20;",new String[]{menuid+""});
+        Cursor cursor = db.rawQuery("select * from menu limit ?,7;",new String[]{menuid+""});
         while(cursor.moveToNext()){
             if(list == null)list = new ArrayList<Menu>();
             Menu menu = new Menu();

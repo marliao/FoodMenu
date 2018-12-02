@@ -27,18 +27,6 @@ public class commentsDao {
     public int insertComment(Comment comment){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
-//        menuid Integer," +
-//        "region varchar(30)," +
-//                " date Integer," +
-//                " hours Integer," +
-//                " seconds Integer," +
-//                " month Integer ," +
-//                " nanos varchar(10)," +
-//                " timezoneOffset Integer," +
-//                " year Integer," +
-//                " minutes Integer," +
-//                " time varchar(30)," +
-//                " day Integer," +
         values.put("menuid",comment.getMenuid());
         values.put("region",comment.getRegion());
         values.put("date",comment.getPtime().getDate());
@@ -54,6 +42,26 @@ public class commentsDao {
         long flag = db.insert("comments", null, values);
         sdb.close();
         return (int) flag;
+    };
+    public void insertCommentList(List<Comment> list){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        for(Comment comment:list){
+            ContentValues values = new ContentValues();
+            values.put("menuid",comment.getMenuid());
+            values.put("region",comment.getRegion());
+            values.put("date",comment.getPtime().getDate());
+            values.put("hours",comment.getPtime().getHours());
+            values.put("seconds",comment.getPtime().getSeconds());
+            values.put("month",comment.getPtime().getMonth());
+            values.put("nanos",comment.getPtime().getNanos());
+            values.put("timezoneOffset",comment.getPtime().getTimezoneOffset());
+            values.put("year",comment.getPtime().getYear());
+            values.put("minutes",comment.getPtime().getMinutes());
+            values.put("time",comment.getPtime().getTime());
+            values.put("day",comment.getPtime().getDay());
+            long flag = db.insert("comments", null, values);
+        }
+        sdb.close();
     };
     public int deleteComments(String menuid,String nanos){
         SQLiteDatabase db = sdb.getWritableDatabase();
