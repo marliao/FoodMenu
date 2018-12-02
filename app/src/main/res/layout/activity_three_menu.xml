@@ -6,7 +6,7 @@
     <TextView
         style="@style/head_page"
         android:text="北京烤鸭"
-        android:drawableRight="@mipmap/ic_launcher"/>
+        android:drawableRight="@android:drawable/star_off"/>
     <ImageView
         android:id="@+id/dish_Img"
         android:background="#000"
@@ -55,18 +55,43 @@
         android:text="鲁菜，是起源于山东的齐鲁风味，是中国传统四大菜系（也是八大菜系）中唯一的自发型菜系（相对于淮扬、川、粤等影响型菜系而言） [1]  ，是历史最悠久、技法最丰富、难度最高、最见功力 [2-3]  的菜系。"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-   <ListView
-       android:id="@+id/dish_step"
-       android:layout_width="wrap_content"
-       android:layout_height="0dp"
-       android:layout_weight="1">
-   </ListView>
+
+    <ListView
+        android:id="@+id/dish_step"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"></ListView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        
+        <TextView
 
+           android:drawableTop="@mipmap/ic_launcher"
+            android:text="评论"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="130dp"
+            />
+        <TextView
+
+            android:drawableTop="@mipmap/ic_launcher"
+            android:text="评论"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="130dp"
+            />
+        <TextView
+
+            android:drawableTop="@mipmap/ic_launcher"
+            android:text="评论"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="130dp"
+            />
     </LinearLayout>
 
 </LinearLayout>

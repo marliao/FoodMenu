@@ -4,13 +4,13 @@ import android.app.Activity;
  import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 
 public class three_Activity extends Activity {
@@ -23,7 +23,7 @@ public class three_Activity extends Activity {
     private int[] dishImg;
     private String[] stepCourse;
     private String[] stepName;
-    private String[] time;
+    private String[] dishTime;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class three_Activity extends Activity {
         dishImg = new int[]{R.drawable.home_trojan,R.drawable.home_trojan,
                 R.drawable.home_trojan,R.drawable.home_trojan,
                 R.drawable.home_trojan};
-        time = new String[]{"10min","10min","10min","10min","10min","10min",};
+        dishTime = new String[]{"10min","10min","10min","10min","10min","10min",};
         dish_step.setAdapter(new MyAdapter());
 
     }
@@ -82,6 +82,10 @@ public class three_Activity extends Activity {
             TextView stepTittle2 = (TextView) view.findViewById(R.id.text2_tittle);
             ImageView step_Img = (ImageView) findViewById(R.id.step_Img);
             TextView time = (TextView) findViewById(R.id.time);
+            stepTittle.setText(stepName[position]);
+            stepTittle2.setText(stepCourse[position]);
+            step_Img.setBackgroundResource(dishImg[position]);
+            time.setText(dishTime[position]);
             return view;
         }
     }
