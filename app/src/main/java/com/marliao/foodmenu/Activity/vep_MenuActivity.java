@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
+import com.marliao.foodmenu.db.dao.menuDao;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
@@ -38,24 +40,30 @@ public class vep_MenuActivity extends Activity {
     Handler  handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-
+            startActivity(new Intent(getApplicationContext(),three_Activity.class));
         }
     };
     private List<Menu> menuListAll;
+    private menuDao mMenuDao;
+    private Button bt_pageUp;
+    private Button bt_pageNext;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vep_menu);
         green_name = (ListView) findViewById(R.id.greens_name);
+        mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
+        bt_pageUp = (Button) findViewById(R.id.bt_pageUp);
+        bt_pageNext = (Button) findViewById(R.id.bt_pageNext);
         intiDate();
 
     }
 
     private void intiDate() {
         FoodMenu foodMenu = MyApplication.getFoodMenu();
-
-        menuList = foodMenu.getMenuList();
+        menuListAll = foodMenu.getMenuList();
+        useMenudb();
         green_name.setAdapter(new MyAdapter());
         //给条目设置一个点击事件
         green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,16 +75,35 @@ public class vep_MenuActivity extends Activity {
                         String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(position));
                         try {
                             MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
-                            System.out.println(ResolveJson.resolveMenuDetail(json).getStepsList());
+                            handler.sendEmptyMessage(0);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 }.start();
-                 startActivity(new Intent(getApplicationContext(),three_Activity.class));
             }
         });
-        //将数据存入到数据库
+        bt_pageUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        bt_pageNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+    private void useMenudb() {
+        //将获取的数据存入到数据库中
+        mMenuDao.insertMenuList(menuListAll);
+        //进行分页查询
+        menuList = mMenuDao.findLimit(0);
 
     }
 
