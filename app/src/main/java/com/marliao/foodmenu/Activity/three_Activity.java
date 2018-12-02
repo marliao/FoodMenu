@@ -232,10 +232,6 @@ public class three_Activity extends Activity {
             return stepsList.size();
         }
 
-        @Override
-        public Steps getItem(int position) {
-            return stepsList.get(position);
-        }
 
         @Override
         public long getItemId(int position) {
