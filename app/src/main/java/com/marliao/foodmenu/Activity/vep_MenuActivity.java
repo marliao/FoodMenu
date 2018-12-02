@@ -54,8 +54,6 @@ public class vep_MenuActivity extends Activity {
         setContentView(R.layout.activity_vep_menu);
         green_name = (ListView) findViewById(R.id.greens_name);
         mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
-        bt_pageUp = (Button) findViewById(R.id.bt_pageUp);
-        bt_pageNext = (Button) findViewById(R.id.bt_pageNext);
         intiDate();
         InitTitle();
     }
