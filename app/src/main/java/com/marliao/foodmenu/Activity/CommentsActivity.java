@@ -18,6 +18,12 @@ import android.widget.TextView;
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
+import com.marliao.foodmenu.db.doman.Comment;
+import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.MenuDetail;
+import com.marliao.foodmenu.db.doman.Ptime;
+
+import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -26,6 +32,7 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView iv_food_image;
     private ListView lv_others_comments;
     private EditText et_your_comment;
+    private List<Comment> commentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +40,21 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
         //初始化控件
         initUI();
+        //初始化数据
+        initData();
         //发送评论
         sendComment();
+        //展示数据
+        initAdapter();
+    }
+
+    private void initAdapter() {
+        lv_others_comments.setAdapter(new MyAdapter());
+    }
+
+    private void initData() {
+        Comments comments = MyApplication.getComments();
+
     }
 
     private void sendComment() {
@@ -43,7 +63,6 @@ public class CommentsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String yourComment = et_your_comment.getText().toString().trim();
                 if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
-                    //TODO 拼接Json字符串，将评论内容发送出去，并将服务器返回的数据解析，告诉用户是否评论成功
                 } else {
                     MyApplication.showToast("评论框不能为空！");
                 }
@@ -64,12 +83,12 @@ public class CommentsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 0;
+            return commentList.size();
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public Comment getItem(int position) {
+            return commentList.get(position);
         }
 
         @Override
@@ -90,9 +109,21 @@ public class CommentsActivity extends AppCompatActivity {
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                //TODO 给数据设置值
             }
-            return null;
+            holder.iv_comments_view.setBackgroundResource(R.mipmap.ic_launcher);
+            holder.tv_username.setText("未知的用户");
+            Ptime ptime = getItem(position).getPtime();
+            holder.tv_date.setText(ptime.getYear()+"年"+ptime.getMonth()+"月"+ptime.getDate()+"日");
+            int hours=Integer.parseInt(ptime.getHours());
+            String str=null;
+            if (hours > 12) {
+                str="AM";
+            }else {
+                str="PM";
+            }
+            holder.tv_time.setText(ptime.getHours()+":"+ptime.getMinutes()+str);
+            holder.tv_comments_content.setText("目前没有数据");
+            return convertView;
         }
     }
 
