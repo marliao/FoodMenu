@@ -2,6 +2,7 @@ package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
  import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -11,7 +12,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
+import com.marliao.foodmenu.db.doman.MenuDetail;
+
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class three_Activity extends Activity {
 
@@ -34,10 +41,17 @@ public class three_Activity extends Activity {
         //制作步骤
         initDate();
 
+        //评论控件
+        intiComment();
+    }
+
+    private void intiComment() {
 
     }
 
     private void initDate() {
+        MenuDetail menuDetail = MyApplication.getMenuDetail();
+
         stepName = new String[]{"步骤一","步骤一","步骤一","步骤一","步骤一"};
         stepCourse = new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
