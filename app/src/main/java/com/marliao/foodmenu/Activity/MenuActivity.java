@@ -54,6 +54,48 @@ public class MenuActivity extends AppCompatActivity {
     private void initAdapter() {
         MyAdapter myAdapter = new MyAdapter(mTypesList);
         menu_one.setAdapter(myAdapter);
+    }
+
+    /**
+     * 获取二级页面的数据
+     * @param typeid
+     */
+    private void getMenuList(final int typeid) {
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    String menusResult = GenerateJson.generateMenus(typeid);
+                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
+                    FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
+                    MyApplication.setFoodMenu(foodMenu);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
+    }
+
+    private void initData() {
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuTypes, null);
+                    Sort resolveSort = ResolveJson.resolveSort(httpResult);
+                    MyApplication.setSort(resolveSort);
+                    mTypesList = resolveSort.getTypesList();
+                    mHandler.sendEmptyMessage(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    private void initUI() {
+        menu_one = (GridView) findViewById(R.id.menu_one);
         menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -85,41 +127,6 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    /**
-     * 获取二级页面的数据
-     * @param typeid
-     */
-    private void getMenuList(int typeid) {
-        try {
-            String menusResult = GenerateJson.generateMenus(typeid);
-            FoodMenu foodMenu = ResolveJson.resolveFoodMenu(menusResult);
-            MyApplication.setFoodMenu(foodMenu);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initData() {
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuTypes, null);
-                    Sort resolveSort = ResolveJson.resolveSort(httpResult);
-                    MyApplication.setSort(resolveSort);
-                    mTypesList = resolveSort.getTypesList();
-                    mHandler.sendEmptyMessage(0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-    }
-
-    private void initUI() {
-        menu_one = (GridView) findViewById(R.id.menu_one);
     }
 
     private class MyAdapter extends BaseAdapter {

@@ -10,7 +10,7 @@ public class GenerateJson {
      * @return
      */
     public static String generateMenus(int typeid){
-        return "{\"typeid\":\""+typeid+"\"}";
+        return "{\"typeid\":\""+typeid+"\",\"startid\":\"1\",\"pagesize\":\"20\"}";
     }
 
     /**
