@@ -33,12 +33,22 @@ import java.util.List;
 
 public class MenuActivity extends AppCompatActivity {
 
+    private static final int DATA = 100;
+    private static final int MENULIST = 101;
     private GridView menu_one;
     private List<Types> mTypesList;
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            initAdapter();
+            switch (msg.what) {
+                case DATA:
+                    MyAdapter myAdapter = new MyAdapter(mTypesList);
+                    menu_one.setAdapter(myAdapter);
+                    break;
+                case MENULIST:
+                    startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
+                    break;
+            }
             super.handleMessage(msg);
         }
     };
@@ -51,17 +61,13 @@ public class MenuActivity extends AppCompatActivity {
         initData();
     }
 
-    private void initAdapter() {
-        MyAdapter myAdapter = new MyAdapter(mTypesList);
-        menu_one.setAdapter(myAdapter);
-    }
-
     /**
      * 获取二级页面的数据
+     *
      * @param typeid
      */
     private void getMenuList(final int typeid) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
@@ -69,6 +75,9 @@ public class MenuActivity extends AppCompatActivity {
                     String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
                     FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
                     MyApplication.setFoodMenu(foodMenu);
+                    Message msg = new Message();
+                    msg.what = MENULIST;
+                    mHandler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -78,7 +87,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
@@ -86,7 +95,9 @@ public class MenuActivity extends AppCompatActivity {
                     Sort resolveSort = ResolveJson.resolveSort(httpResult);
                     MyApplication.setSort(resolveSort);
                     mTypesList = resolveSort.getTypesList();
-                    mHandler.sendEmptyMessage(0);
+                    Message msg = new Message();
+                    msg.what = DATA;
+                    mHandler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -99,32 +110,7 @@ public class MenuActivity extends AppCompatActivity {
         menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case  0:
-                        getMenuList(mTypesList.get(position).getTypeid());
-                        startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
-                        break;
-                    case  1:
-                        getMenuList(mTypesList.get(position).getTypeid());
-                        startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
-                        break;
-                    case  2:
-                        getMenuList(mTypesList.get(position).getTypeid());
-                        startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
-                        break;
-                    case  3:
-                        getMenuList(mTypesList.get(position).getTypeid());
-                        startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
-                        break;
-                    case  4:
-                        getMenuList(mTypesList.get(position).getTypeid());
-                        startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
-                        break;
-                    case  5:
-                        getMenuList(mTypesList.get(position).getTypeid());
-                        startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
-                        break;
-                }
+                getMenuList(mTypesList.get(position).getTypeid());
             }
         });
     }
@@ -134,7 +120,7 @@ public class MenuActivity extends AppCompatActivity {
         private List<Types> typesList;
 
         public MyAdapter(List<Types> mTypesList) {
-            this.typesList=mTypesList;
+            this.typesList = mTypesList;
         }
 
         @Override
@@ -158,20 +144,21 @@ public class MenuActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
-                convertView=View.inflate(MenuActivity.this,R.layout.menu_vep,null);
-                holder.img=convertView.findViewById(R.id.img);
-                holder.Itext=convertView.findViewById(R.id.Itext);
+                convertView = View.inflate(MenuActivity.this, R.layout.menu_vep, null);
+                holder.img = convertView.findViewById(R.id.img);
+                holder.Itext = convertView.findViewById(R.id.Itext);
                 convertView.setTag(holder);
-            }else {
-                holder= (ViewHolder) convertView.getTag();
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
             //TODO 图片显示问题
-            holder.img.setBackground(GetPicUtil.getPic(getItem(position).getTypepic()));
+//            holder.img.setBackground(GetPicUtil.getPic(getItem(position).getTypepic()));
             holder.Itext.setText(getItem(position).getTypename());
             return convertView;
         }
     }
-    class ViewHolder{
+
+    class ViewHolder {
         ImageView img;
         TextView Itext;
     }
