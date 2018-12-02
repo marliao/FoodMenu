@@ -30,6 +30,7 @@ public class stepDao {
         values.put("description",step.getDescription());
         values.put("menuid",step.getMenuid());
         values.put("pic",step.getPic());
+        values.put("islike",0);
         long flag = db.insert("step", null, values);
         sdb.close();
         return (int) flag;
@@ -62,6 +63,7 @@ public class stepDao {
             steps.setDescription(cursor.getString(1));
             steps.setMenuid(cursor.getInt(2));
             steps.setPic(cursor.getString(3));
+            steps.setIslike(cursor.getInt(4));
             list.add(steps);
         }
         cursor.close();
@@ -78,10 +80,24 @@ public class stepDao {
             steps.setDescription(cursor.getString(1));
             steps.setMenuid(cursor.getInt(2));
             steps.setPic(cursor.getString(3));
+            steps.setIslike(cursor.getInt(4));
         }
         cursor.close();
         sdb.close();
         return steps;
+    }
+
+    public boolean updateIslike(Integer stepId  ,Integer isLike){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("islike",isLike);
+        long flag = db.update("step",
+                values,"stepid=?",new String[]{String.valueOf(stepId)});
+        sdb.close();
+        if(flag >0){
+            return true;
+        }
+        return false;
     }
 
 }

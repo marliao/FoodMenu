@@ -4,6 +4,15 @@ public class Steps {
     private int stepid;
     private String description;
     private int menuid;
+    private int islike;
+
+    public int getIslike() {
+        return islike;
+    }
+
+    public void setIslike(int islike) {
+        this.islike = islike;
+    }
 
     public int getStepid() {
         return stepid;
