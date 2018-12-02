@@ -21,6 +21,8 @@ import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
+import com.marliao.foodmenu.db.doman.MenuDetail;
+import com.marliao.foodmenu.db.doman.Steps;
 
 import org.json.JSONException;
 
@@ -39,6 +41,8 @@ public class vep_MenuActivity extends Activity {
 
         }
     };
+    private List<Menu> menuListAll;
+
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +67,12 @@ public class vep_MenuActivity extends Activity {
                         String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(position));
                         try {
                             MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
+                            System.out.println(ResolveJson.resolveMenuDetail(json).getStepsList());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                };
+                }.start();
                  startActivity(new Intent(getApplicationContext(),three_Activity.class));
             }
         });
