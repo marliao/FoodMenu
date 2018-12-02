@@ -1,9 +1,9 @@
 package com.marliao.foodmenu.Activity;
 
-import android.app.Activity;
-import android.os.Bundle;
+        import android.app.Activity;
+        import android.os.Bundle;
 
-import com.marliao.foodmenu.R;
+        import com.marliao.foodmenu.R;
 
 public class three_Activity extends Activity {
     @Override
