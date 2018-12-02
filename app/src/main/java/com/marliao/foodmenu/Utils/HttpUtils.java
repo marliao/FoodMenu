@@ -40,7 +40,7 @@ public class HttpUtils {
         }.start();
     }
 
-    private static String doGet(String urlStr) {
+    public static String doGet(String urlStr) {
         HttpURLConnection connection = null;
         InputStream inputStream = null;
         ByteArrayOutputStream baos=null;
@@ -105,7 +105,7 @@ public class HttpUtils {
         }.start();
     }
 
-    private static String doPost(String urlStr, String params) {
+    public static String doPost(String urlStr, String params) {
         PrintWriter printWriter=null;
         BufferedReader bufferedReader=null;
         String result="";
