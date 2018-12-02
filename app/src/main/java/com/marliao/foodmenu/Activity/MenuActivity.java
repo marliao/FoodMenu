@@ -2,11 +2,11 @@ package com.marliao.foodmenu.Activity;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,10 +19,11 @@ import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
+import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
+import com.marliao.foodmenu.db.dao.categoryTypeDao;
 import com.marliao.foodmenu.db.doman.FoodMenu;
-import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Sort;
 import com.marliao.foodmenu.db.doman.Types;
 
@@ -58,6 +59,22 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         initUI();
         initData();
+        boolean networkAvalible = IsInternet.isNetworkAvalible(this);
+        if (networkAvalible) {
+//            initdb();
+            MyApplication.showToast("有网络");
+        }else {
+            MyApplication.showToast("无网络");
+        }
+    }
+
+    /**
+     * 将数据保存到数据库
+     */
+    private void initdb() {
+        //将首页菜系数据存入数据库
+        categoryTypeDao categoryTypeDao = new categoryTypeDao(this);
+        categoryTypeDao.insertTypeList(mTypesList);
     }
 
     /**

@@ -6,8 +6,10 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tv_food_type"
        style="@style/head_page"
         android:text="徽菜"/>
+
     <ListView
         android:id="@+id/greens_name"
         android:layout_width="match_parent"
