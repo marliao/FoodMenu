@@ -82,6 +82,7 @@ public class CommentsActivity extends AppCompatActivity {
                 try {
                     String yourComment = et_your_comment.getText().toString().trim();
                     if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
+                        yourComment="";
                         String generateComment = GenerateJson.generatePostComment(mMenu.getMenuid(),yourComment);
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuPostComment, generateComment);
                         String responseResult = ResolveJson.resolveResponseComment(httpResult);
