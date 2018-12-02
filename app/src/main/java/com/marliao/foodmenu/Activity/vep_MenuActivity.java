@@ -71,6 +71,8 @@ public class vep_MenuActivity extends Activity {
                         }
                     }
                 };
+
+                 startActivity(new Intent(getApplicationContext(),three_Activity.class));
             }
         });
     }
