@@ -3,6 +3,8 @@
     package="com.marliao.foodmenu">
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".Application.MyApplication"
         android:allowBackup="true"
