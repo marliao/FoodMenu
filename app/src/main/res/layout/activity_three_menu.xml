@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
@@ -67,7 +69,7 @@
         android:orientation="horizontal">
         <TextView
 
-           android:drawableTop="@mipmap/ic_launcher"
+           android:drawableTop="@drawable/comment"
             android:text="评论"
             android:gravity="center"
             android:layout_width="0dp"
@@ -76,8 +78,8 @@
             />
         <TextView
 
-            android:drawableTop="@mipmap/ic_launcher"
-            android:text="评论"
+            android:drawableTop="@drawable/like"
+            android:text="喜欢"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -85,8 +87,8 @@
             />
         <TextView
 
-            android:drawableTop="@mipmap/ic_launcher"
-            android:text="评论"
+            android:drawableTop="@drawable/dislike"
+            android:text="不喜欢"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_weight="1"
