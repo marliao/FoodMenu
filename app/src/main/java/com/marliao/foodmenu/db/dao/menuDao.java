@@ -82,6 +82,28 @@ public class menuDao {
         sdb.close();
         return list;
     }
+    public List<Menu> findLimit(Integer menuid){
+        List<Menu> list = null;
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from menu limit ?,20;",new String[]{menuid+""});
+        while(cursor.moveToNext()){
+            if(list == null)list = new ArrayList<Menu>();
+            Menu menu = new Menu();
+            menu.setMenuid(cursor.getInt(0));
+            menu.setMenuname(cursor.getString(1));
+            menu.setSpic(cursor.getString(2));
+            menu.setAssistmaterial(cursor.getString(3));
+            menu.setLikes(cursor.getInt(4));
+            menu.setAbstracts(cursor.getString(5));
+            menu.setMainmaterial(cursor.getString(6));
+            menu.setTypeid(cursor.getInt(7));
+            menu.setLikes(cursor.getInt(8));
+            list.add(menu);
+        }
+        cursor.close();
+        sdb.close();
+        return list;
+    }
     public Menu findByID(Integer id){
         Menu menu = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
@@ -102,5 +124,6 @@ public class menuDao {
         sdb.close();
         return menu;
     }
+
 
 }
