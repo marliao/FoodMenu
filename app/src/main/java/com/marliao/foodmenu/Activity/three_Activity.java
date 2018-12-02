@@ -1,24 +1,27 @@
 package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
- import android.os.Bundle;
-import android.util.Log;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
+import com.marliao.foodmenu.Utils.GenerateJson;
+import com.marliao.foodmenu.Utils.HttpUtils;
+import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.db.doman.Comments;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 
-import java.util.List;
+import org.json.JSONException;
 
-import static android.content.ContentValues.TAG;
+import java.net.HttpURLConnection;
 
 public class three_Activity extends Activity {
 
@@ -31,9 +34,15 @@ public class three_Activity extends Activity {
     private String[] stepCourse;
     private String[] stepName;
     private String[] dishTime;
+    private MenuDetail mMenuDetail;
+    private LinearLayout ll_comment;
+    private LinearLayout ll_like;
+    private ImageView iv_like;
+    private LinearLayout ll_dislike;
+    private ImageView iv_dislike;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three_menu);
         intinUI();
@@ -41,27 +50,83 @@ public class three_Activity extends Activity {
         //制作步骤
         initDate();
 
-        //评论控件
-        intiComment();
+        //下方三个点击事件
+        initFootClick();
     }
 
-    private void intiComment() {
+    private void initFootClick() {
+        //评论按钮
+        ll_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //准备评论页面的数据
+                initCommentsData();
+                //跳转到评论页面
+                startActivity(new Intent(three_Activity.this, CommentsActivity.class));
+            }
+        });
+        //喜欢和不喜欢按钮的点击事件
+            ll_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (MyApplication.like) {
+                        iv_like.setBackgroundResource(R.drawable.dislike);
+                        iv_dislike.setBackgroundResource(R.drawable.like);
+                    }else {
+                        iv_like.setBackgroundResource(R.drawable.like);
+                        iv_dislike.setBackgroundResource(R.drawable.dislike);
+                    }
+                    MyApplication.like = !MyApplication.like;
+                }
+            });
+            ll_dislike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (MyApplication.dislike) {
+                        iv_dislike.setBackgroundResource(R.drawable.dislike);
+                        iv_like.setBackgroundResource(R.drawable.like);
+                    }else {
+                        iv_dislike.setBackgroundResource(R.drawable.like);
+                        iv_like.setBackgroundResource(R.drawable.dislike);
+                    }
+                    MyApplication.dislike = !MyApplication.dislike;
+                }
+            });
+    }
 
+    /**
+     * 第四个页面的数据
+     */
+    private void initCommentsData() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
+                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
+                    Comments comments = ResolveJson.resolveComments(httpResult);
+                    MyApplication.setComments(comments);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
     }
 
     private void initDate() {
-        MenuDetail menuDetail = MyApplication.getMenuDetail();
+        mMenuDetail = MyApplication.getMenuDetail();
 
-        stepName = new String[]{"步骤一","步骤一","步骤一","步骤一","步骤一"};
+        stepName = new String[]{"步骤一", "步骤一", "步骤一", "步骤一", "步骤一"};
         stepCourse = new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
                 "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",};
-        dishImg = new int[]{R.drawable.home_trojan,R.drawable.home_trojan,
-                R.drawable.home_trojan,R.drawable.home_trojan,
+        dishImg = new int[]{R.drawable.home_trojan, R.drawable.home_trojan,
+                R.drawable.home_trojan, R.drawable.home_trojan,
                 R.drawable.home_trojan};
-        dishTime = new String[]{"10min","10min","10min","10min","10min","10min",};
+        dishTime = new String[]{"10min", "10min", "10min", "10min", "10min", "10min",};
         dish_step.setAdapter(new MyAdapter());
 
     }
@@ -72,7 +137,16 @@ public class three_Activity extends Activity {
         dish_brief = (TextView) findViewById(R.id.dish_brief);
         dish_list = (TextView) findViewById(R.id.dish_list);
         dish_step = (ListView) findViewById(R.id.dish_step);
+
+        //下方三个按钮的控件
+        ll_comment = (LinearLayout) findViewById(R.id.ll_comment);
+        ll_like = (LinearLayout) findViewById(R.id.ll_like);
+        iv_like = (ImageView) findViewById(R.id.iv_like);
+        ll_dislike = (LinearLayout) findViewById(R.id.ll_dislike);
+        iv_dislike = (ImageView) findViewById(R.id.iv_dislike);
+
     }
+
     private class MyAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -91,7 +165,7 @@ public class three_Activity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view=View.inflate(three_Activity.this,R.layout.setting_activity_view,null);
+            View view = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
             TextView stepTittle = (TextView) view.findViewById(R.id.text1_tittle);
             TextView stepTittle2 = (TextView) view.findViewById(R.id.text2_tittle);
             ImageView step_Img = (ImageView) view.findViewById(R.id.step_Img);
