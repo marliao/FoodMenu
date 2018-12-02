@@ -52,7 +52,8 @@ public class ResolveJson {
 
     /**
      * 菜谱列表解析
-     *返回FoodMenu  result，menu集合
+     * 返回FoodMenu  result，menu集合
+     *
      * @param jsonStr
      * @return 返回
      * @throws JSONException
@@ -84,8 +85,9 @@ public class ResolveJson {
 
     /**
      * 菜谱详情的解析
+     *
      * @param jsonStr
-     * @return 返回MenuDetail   result，menu集合，Steps集合
+     * @return 返回MenuDetail   result，menu，Steps集合
      * @throws JSONException
      */
     public static MenuDetail resolveMenuDetail(String jsonStr) throws JSONException {
@@ -93,25 +95,20 @@ public class ResolveJson {
         JSONObject jsonMenu = new JSONObject(jsonStr);
         String result = jsonMenu.getString("result");
         menuDetail.setResult(result);
-        JSONArray menus = jsonMenu.getJSONArray("menu");
-        List<Menu> menuList = new ArrayList<>();
-        for (int i = 0; i < menus.length(); i++) {
-            Menu menu = new Menu();
-            JSONObject jsonMenus = menus.getJSONObject(i);
-            menu.setSpic(jsonMenus.getString("spic"));
-            menu.setAssistmaterial(jsonMenus.getString("assistmaterial"));
-            menu.setNotlikes(jsonMenus.getInt("notlikes"));
-            menu.setMenuname(jsonMenus.getString("menuname"));
-            menu.setAbstracts(jsonMenus.getString("abstracts"));
-            menu.setMainmaterial(jsonMenus.getString("mainmaterial"));
-            menu.setMenuid(jsonMenus.getInt("menuid"));
-            menu.setTypeid(jsonMenus.getInt("typeid"));
-            menu.setLikes(jsonMenus.getInt("likes"));
-            menuList.add(menu);
-        }
-        menuDetail.setMenuList(menuList);
+        JSONObject menuJSONObject = jsonMenu.getJSONObject("menu");
+        Menu menu = new Menu();
+        menu.setSpic(menuJSONObject.getString("spic"));
+        menu.setAssistmaterial(menuJSONObject.getString("assistmaterial"));
+        menu.setNotlikes(menuJSONObject.getInt("notlikes"));
+        menu.setMenuname(menuJSONObject.getString("menuname"));
+        menu.setAbstracts(menuJSONObject.getString("abstracts"));
+        menu.setMainmaterial(menuJSONObject.getString("mainmaterial"));
+        menu.setMenuid(menuJSONObject.getInt("menuid"));
+        menu.setTypeid(menuJSONObject.getInt("typeid"));
+        menu.setLikes(menuJSONObject.getInt("likes"));
+        menuDetail.setMenu(menu);
         JSONArray steps = jsonMenu.getJSONArray("steps");
-        List<Steps> stepsList=new ArrayList<>();
+        List<Steps> stepsList = new ArrayList<>();
         for (int i = 0; i < steps.length(); i++) {
             Steps step = new Steps();
             JSONObject jsonSteps = steps.getJSONObject(i);
@@ -127,6 +124,7 @@ public class ResolveJson {
 
     /**
      * 解析用户评论的工具类
+     *
      * @param jsonStr
      * @return
      * @throws JSONException
@@ -136,7 +134,7 @@ public class ResolveJson {
         JSONObject jsonObject = new JSONObject(jsonStr);
         comments.setResult(jsonObject.getString("result"));
         JSONArray jsonComment = jsonObject.getJSONArray("comments");
-        List<Comment> commentList=new ArrayList<>();
+        List<Comment> commentList = new ArrayList<>();
         for (int i = 0; i < jsonComment.length(); i++) {
             Comment comment = new Comment();
             comment.setMenuid(jsonComment.getJSONObject(i).getInt("menuid"));

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MenuDetail {
     private String result;
-    private List<Menu> menuList;
+    private Menu menu;
     private List<Steps> stepsList;
 
     public String getResult() {
@@ -15,12 +15,12 @@ public class MenuDetail {
         this.result = result;
     }
 
-    public List<Menu> getMenuList() {
-        return menuList;
+    public Menu getMenu() {
+        return menu;
     }
 
-    public void setMenuList(List<Menu> menuList) {
-        this.menuList = menuList;
+    public void setMenu(Menu menu) {
+        this.menu = menu;
     }
 
     public List<Steps> getStepsList() {
