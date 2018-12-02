@@ -33,6 +33,11 @@ public class categoryTypeDao {
         sdb.close();
         return (int) flag;
     };
+
+    /**
+     * 添加一个list集合到数据库
+     * @param list
+     */
     public void insertTypeList(List<Types> list){
         SQLiteDatabase db = sdb.getWritableDatabase();
         for(Types type : list){

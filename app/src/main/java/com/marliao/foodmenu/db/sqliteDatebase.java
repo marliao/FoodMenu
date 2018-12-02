@@ -35,11 +35,13 @@ public class sqliteDatebase extends SQLiteOpenHelper {
                 " menuid integer," +
                 " pic varchar(30)," +
                 " islike Integer," +
+                " iscolleck Integer," +
                 " foreign key(menuid) references menu(menuid))");
 
         db.execSQL("create table comments(" +
                 "menuid Integer," +
                 "region varchar(30)," +
+                "content text," +
                 " date varchar(30)," +
                 " hours varchar(30)," +
                 " seconds varchar(30)," +
