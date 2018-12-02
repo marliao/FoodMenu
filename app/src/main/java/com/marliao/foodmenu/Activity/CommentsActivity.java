@@ -56,6 +56,7 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        //TODO 请求数据，拿到评论列表
         Comments comments = MyApplication.getComments();
         mCommentList = comments.getCommentList();
         MenuDetail menuDetail = MyApplication.getMenuDetail();
@@ -74,6 +75,7 @@ public class CommentsActivity extends AppCompatActivity {
                         String responseResult = ResolveJson.resolveResponseComment(httpResult);
                         if (responseResult.equals("ok")) {
                             MyApplication.showToast("评论成功");
+                            //TODO 发送成功后更新评论列表
                         }else {
                             MyApplication.showToast("评论失败");
                         }

@@ -3,6 +3,7 @@ package com.marliao.foodmenu.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,13 +13,20 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
+import com.marliao.foodmenu.Utils.HttpUtils;
+import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.db.doman.Sort;
+
+import org.json.JSONException;
 
 public class MenuActivity extends AppCompatActivity {
 
     private GridView menu_one;
     private String[] menu_name;
     private int[] img_mennu;
+    private Sort mResolveSort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +37,18 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void intiDate() {
-        menu_name = new String[]{"分类","分类","分类","分类","分类","分类"};
-        img_mennu = new int[]{R.drawable.home_trojan, R.drawable.home_trojan,
-                R.drawable.home_trojan, R.drawable.home_trojan,
-                R.drawable.home_trojan, R.drawable.home_trojan,};
+        try {
+            String httpResult = HttpUtils.doPost(MyApplication.pathMenuTypes, null);
+            mResolveSort = ResolveJson.resolveSort(httpResult);
+            MyApplication.setSort(mResolveSort);
+            Log.i("************",mResolveSort.getResult());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void intiUI() {
+        menu_one = (GridView) findViewById(R.id.menu_one);
         menu_one.setAdapter(new MyAdapter());
         menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,10 +71,6 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void intiUI() {
-        menu_one = (GridView) findViewById(R.id.menu_one);
     }
 
     private class MyAdapter extends BaseAdapter {

@@ -1,7 +1,5 @@
 package com.marliao.foodmenu.Utils;
 
-import android.view.LayoutInflater;
-
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
 import com.marliao.foodmenu.db.doman.FoodMenu;

@@ -12,7 +12,7 @@ import com.marliao.foodmenu.db.doman.Sort;
 public class MyApplication extends Application {
 
     public static final String pathMenuTypes="http://192.168.1.100:8080/menu/types";
-    public static final String pathMenus="http://192.168.1.100:8080/menu/menus";
+    public static final String pathMenuMenus="http://192.168.1.100:8080/menu/menus";
     public static final String pathMenuDetail="http://192.168.1.100:8080/menu/menuDetail";
     public static final String pathMenuSupport="http://192.168.1.100:8080/menu/support";
     public static final String pathMenuComments="http://192.168.1.100:8080/menu/comments";

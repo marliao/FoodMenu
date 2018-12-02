@@ -7,25 +7,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.RowId;
 
+/**
+ * Http请求的工具类
+ */
 public class HttpUtils {
-    private static final int TIMEOUT_IN_MINUTES = 5000;
+
+    private static final int TIMEOUT_IN_MILLIONS = 5000;
 
     public interface CallBack {
         void onRequestComplete(String result);
     }
 
-    /**
-     * doGET的异步请求
-     * @param urlStr
-     * @param callBack
-     */
     public static void doGetAsyn(final String urlStr, final CallBack callBack) {
         new Thread() {
-            @Override
             public void run() {
                 try {
                     String result = doGet(urlStr);
@@ -35,7 +31,21 @@ public class HttpUtils {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                super.run();
+            }
+        }.start();
+    }
+
+    public static void doPostAsyn(final String urlStr, final String params, final CallBack callBack) {
+        new Thread() {
+            public void run() {
+                try {
+                    String result = doPost(urlStr, params);
+                    if (callBack != null) {
+                        callBack.onRequestComplete(result);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }.start();
     }
@@ -43,96 +53,76 @@ public class HttpUtils {
     public static String doGet(String urlStr) {
         HttpURLConnection connection = null;
         InputStream inputStream = null;
-        ByteArrayOutputStream baos=null;
+        ByteArrayOutputStream baos = null;
         try {
             URL url = new URL(urlStr);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setReadTimeout(TIMEOUT_IN_MINUTES);
-            connection.setConnectTimeout(TIMEOUT_IN_MINUTES);
+            connection.setReadTimeout(TIMEOUT_IN_MILLIONS);
+            connection.setConnectTimeout(TIMEOUT_IN_MILLIONS);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("connection", "Keep-Alive");
             if (connection.getResponseCode() == 200) {
                 inputStream = connection.getInputStream();
                 baos = new ByteArrayOutputStream();
-                int len=-1;
-                byte[] buffer = new byte[1024];
-                while ((len=inputStream.read(buffer))!=-1){
-                    baos.write(buffer,0,len);
+                int len = -1;
+                byte[] buf = new byte[128];
+
+                while ((len = inputStream.read(buf)) != -1) {
+                    baos.write(buf, 0, len);
                 }
                 baos.flush();
-            }else {
-                throw new RuntimeException("responseCode is not 200 ...");
+                return baos.toString();
+            } else {
+                throw new RuntimeException(" responseCode is not 200 ... ");
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if (inputStream != null) {
+                if (inputStream != null)
                     inputStream.close();
-                }
-                if (baos != null) {
-                    baos.close();
-                }
             } catch (IOException e) {
-                e.printStackTrace();
+            }
+            try {
+                if (baos != null)
+                    baos.close();
+            } catch (IOException e) {
             }
             connection.disconnect();
         }
         return null;
     }
 
-    /**
-     * doPost异步请求
-     * @param urlStr 指定的网址
-     * @param params    要传递的参数
-     * @param callBack
-     */
-    public static void doPostAsyn(final String urlStr, final String params, final CallBack callBack) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    String result = doPost(urlStr,params);
-                    if (callBack != null) {
-                        callBack.onRequestComplete(result);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                super.run();
-            }
-        }.start();
-    }
-
-    public static String doPost(String urlStr, String params) {
-        PrintWriter printWriter=null;
-        BufferedReader bufferedReader=null;
-        String result="";
+    public static String doPost(String url, String param) {
+        PrintWriter printWriter = null;
+        BufferedReader bufferedReader = null;
+        String result = "";
         try {
-            URL url = new URL(urlStr);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Content-Type","application/json");
-            connection.setRequestProperty("charset","utf-8");
-            connection.setRequestMethod("POST");
-            connection.setUseCaches(false);
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-            connection.setReadTimeout(TIMEOUT_IN_MINUTES);
-            connection.setConnectTimeout(TIMEOUT_IN_MINUTES);
-            if (params != null && !params.equals("")) {
-                printWriter = new PrintWriter(connection.getOutputStream());
-                printWriter.print(params);
+            URL realUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) realUrl
+                    .openConnection();
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("charset", "utf-8");
+            conn.setRequestMethod("POST");
+            conn.setUseCaches(false);
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setReadTimeout(TIMEOUT_IN_MILLIONS);
+            conn.setConnectTimeout(TIMEOUT_IN_MILLIONS);
+            if (param != null && !param.trim().equals("")) {
+                printWriter = new PrintWriter(conn.getOutputStream());
+                printWriter.print(param);
                 printWriter.flush();
             }
-            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
-            while ((line=bufferedReader.readLine())!=null){
-                result+=line;
+            while ((line = bufferedReader.readLine()) != null) {
+                result += line;
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 if (printWriter != null) {
                     printWriter.close();
@@ -140,8 +130,8 @@ public class HttpUtils {
                 if (bufferedReader != null) {
                     bufferedReader.close();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
         return result;
