@@ -45,10 +45,12 @@ public class vep_MenuActivity extends Activity {
         setContentView(R.layout.activity_vep_menu);
         green_name = (ListView) findViewById(R.id.greens_name);
         intiDate();
+
     }
 
     private void intiDate() {
         FoodMenu foodMenu = MyApplication.getFoodMenu();
+
         menuList = foodMenu.getMenuList();
         green_name.setAdapter(new MyAdapter());
         //给条目设置一个点击事件
@@ -69,6 +71,8 @@ public class vep_MenuActivity extends Activity {
                  startActivity(new Intent(getApplicationContext(),three_Activity.class));
             }
         });
+        //将数据存入到数据库
+
     }
 
     private class MyAdapter extends BaseAdapter {

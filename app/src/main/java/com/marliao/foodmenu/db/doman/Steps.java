@@ -5,6 +5,15 @@ public class Steps {
     private String description;
     private int menuid;
     private int islike;
+    private int iscolleck;
+
+    public int getIscolleck() {
+        return iscolleck;
+    }
+
+    public void setIscolleck(int iscolleck) {
+        this.iscolleck = iscolleck;
+    }
 
     public int getIslike() {
         return islike;
