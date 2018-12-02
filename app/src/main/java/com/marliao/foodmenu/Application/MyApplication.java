@@ -17,6 +17,7 @@ public class MyApplication extends Application {
     public static final String pathMenuSupport="http://192.168.1.101:8080/menu/support";
     public static final String pathMenuComments="http://192.168.1.101:8080/menu/comments";
     public static final String pathMenuPostComment="http://192.168.1.101:8080/menu/postComment";
+    public static final String Http="http://192.168.1.101:8080/menu/";
 
     private static Comments comments;
     private static FoodMenu foodMenu;

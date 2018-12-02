@@ -98,7 +98,7 @@ public class CommentsActivity extends AppCompatActivity {
         //给控件设置值
     }
 
-    public class MyAdapter extends BaseAdapter {
+    private class MyAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
