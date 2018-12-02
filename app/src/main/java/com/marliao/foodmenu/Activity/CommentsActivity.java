@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
+import com.marliao.foodmenu.db.doman.Comments;
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -33,8 +34,15 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
         //初始化控件
         initUI();
+        //初始化数据
+        initData();
         //发送评论
         sendComment();
+    }
+
+    private void initData() {
+        Comments comments = MyApplication.getComments();
+        comments.getCommentList();
     }
 
     private void sendComment() {
@@ -90,7 +98,8 @@ public class CommentsActivity extends AppCompatActivity {
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                //TODO 给数据设置值
+                holder.iv_comments_view.setBackgroundResource(R.mipmap.ic_launcher);
+                holder.tv_username.setText("未知的用户");
             }
             return null;
         }
