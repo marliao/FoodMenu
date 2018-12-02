@@ -21,26 +21,26 @@
         android:id="@+id/img2"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        android:background="@mipmap/ic_launcher"/>
+        android:background="@android:drawable/star_on"/>
     <ImageView
         android:id="@+id/img3"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        android:background="@mipmap/ic_launcher"/>
+        android:background="@android:drawable/star_on"/>
     <ImageView
         android:id="@+id/img4"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        android:background="@mipmap/ic_launcher"/>
+        android:background="@android:drawable/star_on"/>
     <ImageView
         android:id="@+id/img5"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        android:background="@mipmap/ic_launcher"/>
+        android:background="@android:drawable/star_on"/>
     <ImageView
         android:id="@+id/img6"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        android:background="@mipmap/ic_launcher"/>
+        android:background="@android:drawable/star_on"/>
 
 </LinearLayout>
