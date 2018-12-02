@@ -57,7 +57,11 @@ public class vep_MenuActivity extends Activity {
         bt_pageUp = (Button) findViewById(R.id.bt_pageUp);
         bt_pageNext = (Button) findViewById(R.id.bt_pageNext);
         intiDate();
+        InitTitle();
+    }
 
+    private void InitTitle() {
+        int typeid = menuListAll.get(0).getTypeid();
     }
 
     private void intiDate() {
@@ -79,25 +83,10 @@ public class vep_MenuActivity extends Activity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }.start();
             }
         });
-        bt_pageUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        bt_pageNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
     }
 
     private void useMenudb() {
@@ -105,7 +94,6 @@ public class vep_MenuActivity extends Activity {
         mMenuDao.insertMenuList(menuListAll);
         //进行分页查询
         menuList = mMenuDao.findLimit(0);
-
     }
 
     private class MyAdapter extends BaseAdapter {
