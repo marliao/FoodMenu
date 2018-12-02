@@ -225,5 +225,38 @@ public class three_Activity extends Activity {
         ImageView step_Img;
         TextView dish_time;
     }
+    /*
+    private class MyAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return stepsList.size();
+        }
 
+        @Override
+        public Steps getItem(int position) {
+            return stepsList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
+            TextView stepTittle = (TextView) view.findViewById(R.id.text1_tittle);
+            TextView stepTittle2 = (TextView) view.findViewById(R.id.text2_tittle);
+            ImageView step_Img = (ImageView) view.findViewById(R.id.step_Img);
+            TextView time = (TextView) view.findViewById(R.id.time);
+            stepTittle.setText("步骤："+getItem(position).getStepid());
+            stepTittle2.setText(getItem(position).getDescription());
+            step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(),three_Activity.this));
+            time.setText("10min");
+            return view;
+        }
+    }
+     */
 }
