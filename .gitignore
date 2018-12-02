@@ -9,20 +9,3 @@
 /build
 /captures
 .externalNativeBuild
-
-
-*.apk
-*.ap_
-*.dex
-*.class
-*.log
-# 打包秘钥文件 可不写
-*.jks
-
-bin/
-gen/
-out/
-
-proguard/
-.navigation/
-/.idea
