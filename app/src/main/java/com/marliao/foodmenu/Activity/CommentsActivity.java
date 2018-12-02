@@ -1,6 +1,8 @@
 package com.marliao.foodmenu.Activity;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -36,6 +38,16 @@ public class CommentsActivity extends AppCompatActivity {
     private EditText et_your_comment;
     private List<Comment> mCommentList;
     private Menu mMenu;
+    private MyAdapter myAdapter;
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (myAdapter != null) {
+                myAdapter.notifyDataSetChanged();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +64,11 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     private void initAdapter() {
-        lv_others_comments.setAdapter(new MyAdapter());
+        myAdapter = new MyAdapter(mCommentList);
+        lv_others_comments.setAdapter(myAdapter);
     }
 
     private void initData() {
-        //TODO 请求数据，拿到评论列表
         Comments comments = MyApplication.getComments();
         mCommentList = comments.getCommentList();
         MenuDetail menuDetail = MyApplication.getMenuDetail();
@@ -75,7 +87,7 @@ public class CommentsActivity extends AppCompatActivity {
                         String responseResult = ResolveJson.resolveResponseComment(httpResult);
                         if (responseResult.equals("ok")) {
                             MyApplication.showToast("评论成功");
-                            //TODO 发送成功后更新评论列表
+                            newData();
                         }else {
                             MyApplication.showToast("评论失败");
                         }
@@ -89,6 +101,27 @@ public class CommentsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 评论成功后更新评论列表
+     */
+    private void newData() {
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    String commentResult = GenerateJson.generateComment(mMenu.getMenuid());
+                    String jsonResult = HttpUtils.doPost(MyApplication.pathMenuComments, commentResult);
+                    Comments comments = ResolveJson.resolveComments(jsonResult);
+                    MyApplication.setComments(comments);
+                    mHandler.sendEmptyMessage(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
+    }
+
     private void initUI() {
         tv_food_comments = (TextView) findViewById(R.id.tv_food_comments);
         iv_food_image = (ImageView) findViewById(R.id.iv_food_image);
@@ -100,14 +133,19 @@ public class CommentsActivity extends AppCompatActivity {
 
     private class MyAdapter extends BaseAdapter {
 
+        private List<Comment> commentList;
+        public MyAdapter(List<Comment> mCommentList) {
+            this.commentList=mCommentList;
+        }
+
         @Override
         public int getCount() {
-            return mCommentList.size();
+            return commentList.size();
         }
 
         @Override
         public Comment getItem(int position) {
-            return mCommentList.get(position);
+            return commentList.get(position);
         }
 
         @Override
