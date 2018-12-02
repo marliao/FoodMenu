@@ -17,8 +17,8 @@ public class stepDao {
     public stepDao(Context context){
         sdb = new sqliteDatebase(context);
     }
-    private stepDao stepDao = null;
-    public stepDao getInstanceStep(Context context){
+    private static  stepDao stepDao = null;
+    public static stepDao getInstanceStep(Context context){
        if(stepDao  == null){
            stepDao  = new stepDao(context);
        }

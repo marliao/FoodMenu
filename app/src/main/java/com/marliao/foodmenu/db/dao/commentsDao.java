@@ -17,8 +17,8 @@ public class commentsDao {
     public commentsDao(Context context){
         sdb = new sqliteDatebase(context);
     }
-    private commentsDao commentsDao = null;
-    public commentsDao getInstanceComments(Context context){
+    private static commentsDao commentsDao = null;
+    public static commentsDao getInstanceComments(Context context){
        if(commentsDao  == null){
            commentsDao  = new commentsDao(context);
        }

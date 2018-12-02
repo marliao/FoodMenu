@@ -16,14 +16,14 @@ public class menuDao {
     public menuDao(Context context){
         sdb = new sqliteDatebase(context);
     }
-    private menuDao menuDao = null;
-    public menuDao getInstanceMenu(Context context){
+    private static menuDao menuDao = null;
+    public static menuDao getInstanceMenu(Context context){
        if(menuDao  == null){
            menuDao  = new menuDao(context);
        }
         return menuDao;
     }
-    public int insertMenu(Menu menu){
+    public  int insertMenu(Menu menu){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("menuname",menu.getMenuname());
