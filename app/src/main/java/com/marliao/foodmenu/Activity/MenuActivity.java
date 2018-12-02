@@ -57,6 +57,7 @@ public class MenuActivity extends AppCompatActivity {
                     case  0:
                         Intent intent = new Intent(getApplicationContext(), vep_MenuActivity.class);
                         startActivity(intent);
+                        finish();
                         break;
                     case  1:
                         break;

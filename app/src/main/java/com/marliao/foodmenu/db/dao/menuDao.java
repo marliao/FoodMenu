@@ -16,14 +16,14 @@ public class menuDao {
     public menuDao(Context context){
         sdb = new sqliteDatebase(context);
     }
-    private menuDao menuDao = null;
-    public menuDao getInstanceMenu(Context context){
+    private static menuDao menuDao = null;
+    public static menuDao getInstanceMenu(Context context){
        if(menuDao  == null){
            menuDao  = new menuDao(context);
        }
         return menuDao;
     }
-    public int insertMenu(Menu menu){
+    public  int insertMenu(Menu menu){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("menuname",menu.getMenuname());
@@ -82,6 +82,28 @@ public class menuDao {
         sdb.close();
         return list;
     }
+    public List<Menu> findLimit(Integer menuid){
+        List<Menu> list = null;
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        Cursor cursor = db.rawQuery("select * from menu limit ?,20;",new String[]{menuid+""});
+        while(cursor.moveToNext()){
+            if(list == null)list = new ArrayList<Menu>();
+            Menu menu = new Menu();
+            menu.setMenuid(cursor.getInt(0));
+            menu.setMenuname(cursor.getString(1));
+            menu.setSpic(cursor.getString(2));
+            menu.setAssistmaterial(cursor.getString(3));
+            menu.setLikes(cursor.getInt(4));
+            menu.setAbstracts(cursor.getString(5));
+            menu.setMainmaterial(cursor.getString(6));
+            menu.setTypeid(cursor.getInt(7));
+            menu.setLikes(cursor.getInt(8));
+            list.add(menu);
+        }
+        cursor.close();
+        sdb.close();
+        return list;
+    }
     public Menu findByID(Integer id){
         Menu menu = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
@@ -102,5 +124,6 @@ public class menuDao {
         sdb.close();
         return menu;
     }
+
 
 }

@@ -17,8 +17,8 @@ public class stepDao {
     public stepDao(Context context){
         sdb = new sqliteDatebase(context);
     }
-    private stepDao stepDao = null;
-    public stepDao getInstanceStep(Context context){
+    private static  stepDao stepDao = null;
+    public static stepDao getInstanceStep(Context context){
        if(stepDao  == null){
            stepDao  = new stepDao(context);
        }
@@ -100,4 +100,13 @@ public class stepDao {
         return false;
     }
 
+    public int selectIslike(Integer stepId){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        Cursor cursor = db.query("step", new String[]{"islike"}, "stepid=?", new String[]{stepId + ""},
+                null, null, null);
+        if(cursor.moveToNext()){
+            return cursor.getInt(0);
+        }
+        return 0;
+    }
 }

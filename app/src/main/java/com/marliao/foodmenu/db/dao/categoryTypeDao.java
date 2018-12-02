@@ -16,8 +16,8 @@ public class categoryTypeDao {
     public categoryTypeDao(Context context){
         sdb = new sqliteDatebase(context);
     }
-    private categoryTypeDao categorytype = null;
-    public categoryTypeDao getInstanceCategoryType(Context context){
+    private static categoryTypeDao categorytype = null;
+    public static categoryTypeDao getInstanceCategoryType(Context context){
        if(categorytype  == null){
            categorytype  = new categoryTypeDao(context);
        }

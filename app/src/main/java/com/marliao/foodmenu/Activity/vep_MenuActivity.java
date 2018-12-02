@@ -55,8 +55,9 @@ public class vep_MenuActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case  0:
-                        Intent intent=new Intent(getApplicationContext(),three_Activity.class);
+                        Intent intent=new Intent(vep_MenuActivity.this,three_Activity.class);
                         startActivity(intent);
+                        finish();
                         break;
                     case  1:
                         break;
