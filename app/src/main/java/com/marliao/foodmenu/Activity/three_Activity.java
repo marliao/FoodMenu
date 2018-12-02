@@ -34,7 +34,15 @@ public class three_Activity extends Activity {
     }
 
     private void initDate() {
+        String[] stepName=new String[]{"步骤一","步骤一","步骤一","步骤一","步骤一"};
+        String[] stepCourse=new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
+                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
+                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
+                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
+                "鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",};
+        int[] dishImg= new int[]{};
         dish_step.setAdapter(new MyAdapter());
+
     }
 
     private void intinUI() {
