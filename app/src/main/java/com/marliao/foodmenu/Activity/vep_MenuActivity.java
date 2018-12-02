@@ -24,6 +24,7 @@ import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
+import com.marliao.foodmenu.db.doman.MenuDetail;
 
 import org.json.JSONException;
 
@@ -54,7 +55,23 @@ public class vep_MenuActivity extends Activity {
         FoodMenu foodMenu = MyApplication.getFoodMenu();
         menuList = foodMenu.getMenuList();
         green_name.setAdapter(new MyAdapter());
-
+        //给条目设置一个点击事件
+        green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(position));
+                        try {
+                            MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+            }
+        });
     }
 
     private class MyAdapter extends BaseAdapter {
