@@ -7,8 +7,6 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,10 +18,11 @@ import android.widget.TextView;
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
-import com.marliao.foodmenu.Utils.GetPicUtil;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.doman.FoodMenu;
+import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Sort;
 import com.marliao.foodmenu.db.doman.Types;
 
@@ -151,8 +150,7 @@ public class MenuActivity extends AppCompatActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            //TODO 图片显示问题
-//            holder.img.setBackground(GetPicUtil.getPic(getItem(position).getTypepic()));
+            holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(),MenuActivity.this));
             holder.Itext.setText(getItem(position).getTypename());
             return convertView;
         }

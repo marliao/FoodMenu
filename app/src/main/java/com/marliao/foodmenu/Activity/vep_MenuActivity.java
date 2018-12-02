@@ -1,31 +1,25 @@
 package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
-import com.marliao.foodmenu.Utils.GetPicUtil;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
-import com.marliao.foodmenu.db.doman.MenuDetail;
 
 import org.json.JSONException;
 
@@ -109,8 +103,7 @@ public class vep_MenuActivity extends Activity {
             holder.menu_name.setText(item.getMenuname());
             String spic = item.getSpic();
             System.out.println(spic);
-            Drawable pic = GetPicUtil.getPic(spic);
-            holder.img1.setBackgroundDrawable(pic);
+            holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic,vep_MenuActivity.this));
             return convertView;
         }
 
