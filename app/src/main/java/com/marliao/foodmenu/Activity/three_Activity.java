@@ -1,7 +1,8 @@
 package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
- import android.os.Bundle;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class three_Activity extends Activity {
     private String[] stepCourse;
     private String[] stepName;
     private String[] dishTime;
+    private TextView comment;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -45,12 +47,21 @@ public class three_Activity extends Activity {
         intiComment();
     }
 
+    //给评论设计一个点击事件
     private void intiComment() {
-
+        comment = (TextView) findViewById(R.id.comment);
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(three_Activity.this, CommentsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void initDate() {
-        MenuDetail menuDetail = MyApplication.getMenuDetail();
+
 
         stepName = new String[]{"步骤一","步骤一","步骤一","步骤一","步骤一"};
         stepCourse = new String[]{"鲁菜，是起源于山东的齐鲁风味是起源于山东的齐鲁风味",
