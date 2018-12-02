@@ -38,6 +38,11 @@ public class menuDao {
         sdb.close();
         return (int) flag;
     };
+
+    /**
+     * 添加一个list集合到数据库
+     * @param list
+     */
     public  void insertMenuList(List<Menu> list){
         SQLiteDatabase db = sdb.getWritableDatabase();
         for(Menu menu : list){
@@ -98,6 +103,12 @@ public class menuDao {
         sdb.close();
         return list;
     }
+
+    /**
+     * 进行分页查询
+     * @param menuid
+     * @return 返回的是一页的list集合
+     */
     public List<Menu> findLimit(Integer menuid){
         List<Menu> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
