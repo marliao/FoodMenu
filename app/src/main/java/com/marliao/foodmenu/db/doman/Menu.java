@@ -82,4 +82,19 @@ public class Menu {
     public void setLikes(int likes) {
         this.likes = likes;
     }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "spic='" + spic + '\'' +
+                ", assistmaterial='" + assistmaterial + '\'' +
+                ", notlikes=" + notlikes +
+                ", menuname='" + menuname + '\'' +
+                ", abstracts='" + abstracts + '\'' +
+                ", mainmaterial='" + mainmaterial + '\'' +
+                ", menuid=" + menuid +
+                ", typeid=" + typeid +
+                ", likes=" + likes +
+                '}';
+    }
 }

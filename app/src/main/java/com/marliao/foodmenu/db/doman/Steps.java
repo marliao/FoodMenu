@@ -56,4 +56,16 @@ public class Steps {
     }
 
     private String pic;
+
+    @Override
+    public String toString() {
+        return "Steps{" +
+                "stepid=" + stepid +
+                ", description='" + description + '\'' +
+                ", menuid=" + menuid +
+                ", islike=" + islike +
+                ", iscolleck=" + iscolleck +
+                ", pic='" + pic + '\'' +
+                '}';
+    }
 }
