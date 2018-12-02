@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,6 +25,7 @@ import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.categoryTypeDao;
 import com.marliao.foodmenu.db.doman.FoodMenu;
+import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Sort;
 import com.marliao.foodmenu.db.doman.Types;
 
@@ -37,6 +39,7 @@ public class MenuActivity extends AppCompatActivity {
     private static final int MENULIST = 101;
     private GridView menu_one;
     private List<Types> mTypesList;
+    private boolean mNetworkAvalible;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -59,13 +62,6 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         initUI();
         initData();
-        boolean networkAvalible = IsInternet.isNetworkAvalible(this);
-        if (networkAvalible) {
-//            initdb();
-            MyApplication.showToast("有网络");
-        }else {
-            MyApplication.showToast("无网络");
-        }
     }
 
     /**
@@ -103,22 +99,40 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuTypes, null);
-                    Sort resolveSort = ResolveJson.resolveSort(httpResult);
-                    MyApplication.setSort(resolveSort);
-                    mTypesList = resolveSort.getTypesList();
+        if (mNetworkAvalible) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        String httpResult = HttpUtils.doPost(MyApplication.pathMenuTypes, null);
+                        Sort resolveSort = ResolveJson.resolveSort(httpResult);
+                        MyApplication.setSort(resolveSort);
+                        mTypesList = resolveSort.getTypesList();
+                        Message msg = new Message();
+                        msg.what = DATA;
+                        mHandler.sendMessage(msg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+            Log.i("**************","有网络状态");
+            //将数据存入数据库
+            initdb();
+        }else {
+            new Thread(){
+                @Override
+                public void run() {
+                    categoryTypeDao categoryTypeDao = new categoryTypeDao(MenuActivity.this);
+                    mTypesList = categoryTypeDao.findAll();
                     Message msg = new Message();
                     msg.what = DATA;
                     mHandler.sendMessage(msg);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    super.run();
                 }
-            }
-        }.start();
+            }.start();
+            Log.i("**************","无网络状态");
+        }
     }
 
     private void initUI() {
