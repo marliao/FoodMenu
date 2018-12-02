@@ -20,6 +20,7 @@ import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Ptime;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     private void initData() {
         Comments comments = MyApplication.getComments();
-        commentList = comments.getCommentList();
+
     }
 
     private void sendComment() {
@@ -62,7 +63,6 @@ public class CommentsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String yourComment = et_your_comment.getText().toString().trim();
                 if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
-                    //TODO 拼接Json字符串，将评论内容发送出去，并将服务器返回的数据解析，告诉用户是否评论成功
                 } else {
                     MyApplication.showToast("评论框不能为空！");
                 }
