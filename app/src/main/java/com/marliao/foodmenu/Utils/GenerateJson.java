@@ -18,7 +18,7 @@ public class GenerateJson {
      * @param menuid    菜品编号
      * @return
      */
-    public String generatemenuDetail(int menuid){
+    public static  String generatemenuDetail(int menuid){
         return "{\"menuid\":"+menuid+"}";
     }
 
