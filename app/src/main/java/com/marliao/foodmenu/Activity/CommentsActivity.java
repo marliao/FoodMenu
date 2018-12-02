@@ -1,11 +1,8 @@
 package com.marliao.foodmenu.Activity;
 
-import android.media.Image;
-import android.sax.TextElementListener;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,9 +15,15 @@ import android.widget.TextView;
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
+import com.marliao.foodmenu.Utils.HttpUtils;
+import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.MenuDetail;
+import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Ptime;
+
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -31,7 +34,8 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView iv_food_image;
     private ListView lv_others_comments;
     private EditText et_your_comment;
-    private List<Comment> commentList;
+    private List<Comment> mCommentList;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +57,31 @@ public class CommentsActivity extends AppCompatActivity {
 
     private void initData() {
         Comments comments = MyApplication.getComments();
-        commentList = comments.getCommentList();
+        mCommentList = comments.getCommentList();
+        MenuDetail menuDetail = MyApplication.getMenuDetail();
+        mMenu = menuDetail.getMenu();
     }
 
     private void sendComment() {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String yourComment = et_your_comment.getText().toString().trim();
-                if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
-                    //TODO 拼接Json字符串，将评论内容发送出去，并将服务器返回的数据解析，告诉用户是否评论成功
-                } else {
-                    MyApplication.showToast("评论框不能为空！");
+                try {
+                    String yourComment = et_your_comment.getText().toString().trim();
+                    if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
+                        String generateComment = GenerateJson.generatePostComment(mMenu.getMenuid(),yourComment);
+                        String httpResult = HttpUtils.doPost(MyApplication.pathMenuPostComment, generateComment);
+                        String responseResult = ResolveJson.resolveResponseComment(httpResult);
+                        if (responseResult.equals("ok")) {
+                            MyApplication.showToast("评论成功");
+                        }else {
+                            MyApplication.showToast("评论失败");
+                        }
+                    } else {
+                        MyApplication.showToast("评论框不能为空！");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -83,12 +100,12 @@ public class CommentsActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return commentList.size();
+            return mCommentList.size();
         }
 
         @Override
         public Comment getItem(int position) {
-            return commentList.get(position);
+            return mCommentList.get(position);
         }
 
         @Override
@@ -101,11 +118,11 @@ public class CommentsActivity extends AppCompatActivity {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
                 convertView = View.inflate(CommentsActivity.this, R.layout.list_comments_item, null);
-                holder.iv_comments_view = findViewById(R.id.iv_comments_image);
-                holder.tv_username = findViewById(R.id.tv_username);
-                holder.tv_date = findViewById(R.id.tv_date);
-                holder.tv_time = findViewById(R.id.tv_time);
-                holder.tv_comments_content = findViewById(R.id.tv_comments_content);
+                holder.iv_comments_view = convertView.findViewById(R.id.iv_comments_image);
+                holder.tv_username = convertView.findViewById(R.id.tv_username);
+                holder.tv_date = convertView.findViewById(R.id.tv_date);
+                holder.tv_time = convertView.findViewById(R.id.tv_time);
+                holder.tv_comments_content = convertView.findViewById(R.id.tv_comments_content);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -113,15 +130,15 @@ public class CommentsActivity extends AppCompatActivity {
             holder.iv_comments_view.setBackgroundResource(R.mipmap.ic_launcher);
             holder.tv_username.setText("未知的用户");
             Ptime ptime = getItem(position).getPtime();
-            holder.tv_date.setText(ptime.getYear()+"年"+ptime.getMonth()+"月"+ptime.getDate()+"日");
-            int hours=Integer.parseInt(ptime.getHours());
-            String str=null;
+            holder.tv_date.setText(ptime.getYear() + "年" + ptime.getMonth() + "月" + ptime.getDate() + "日");
+            int hours = Integer.parseInt(ptime.getHours());
+            String str = null;
             if (hours > 12) {
-                str="AM";
-            }else {
-                str="PM";
+                str = "AM";
+            } else {
+                str = "PM";
             }
-            holder.tv_time.setText(ptime.getHours()+":"+ptime.getMinutes()+str);
+            holder.tv_time.setText(ptime.getHours() + ":" + ptime.getMinutes() + str);
             holder.tv_comments_content.setText("目前没有数据");
             return convertView;
         }
