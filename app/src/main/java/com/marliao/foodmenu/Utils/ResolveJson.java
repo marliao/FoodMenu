@@ -30,7 +30,7 @@ public class ResolveJson {
      * @return 返回Sort（java Bean）：result，Types
      * @throws JSONException
      */
-    public Sort resolveSort(String jsonStr) throws JSONException {
+    public static Sort resolveSort(String jsonStr) throws JSONException {
         Sort sort = new Sort();
         JSONObject jsonSort = new JSONObject(jsonStr);
         String result = jsonSort.getString("result");
@@ -57,7 +57,7 @@ public class ResolveJson {
      * @return 返回
      * @throws JSONException
      */
-    public FoodMenu resolveFoodMenu(String jsonStr) throws JSONException {
+    public static FoodMenu resolveFoodMenu(String jsonStr) throws JSONException {
         FoodMenu foodMenu = new FoodMenu();
         JSONObject jsonMenu = new JSONObject(jsonStr);
         String result = jsonMenu.getString("result");
@@ -88,7 +88,7 @@ public class ResolveJson {
      * @return 返回MenuDetail   result，menu集合，Steps集合
      * @throws JSONException
      */
-    public MenuDetail resolveMenuDetail(String jsonStr) throws JSONException {
+    public static MenuDetail resolveMenuDetail(String jsonStr) throws JSONException {
         MenuDetail menuDetail = new MenuDetail();
         JSONObject jsonMenu = new JSONObject(jsonStr);
         String result = jsonMenu.getString("result");
@@ -131,7 +131,7 @@ public class ResolveJson {
      * @return
      * @throws JSONException
      */
-    public Comments resolveComments(String jsonStr) throws JSONException {
+    public static Comments resolveComments(String jsonStr) throws JSONException {
         Comments comments = new Comments();
         JSONObject jsonObject = new JSONObject(jsonStr);
         comments.setResult(jsonObject.getString("result"));

@@ -9,7 +9,7 @@ public class GenerateJson {
      * @param typeid    分类编号
      * @return
      */
-    public String generateMenus(int typeid){
+    public static String generateMenus(int typeid){
         return "{\"typeid\":\""+typeid+"\"}";
     }
 
@@ -28,7 +28,7 @@ public class GenerateJson {
      * @param Like  是否喜欢该菜品（yes/no）
      * @return
      */
-    public String generateSupport(int menuid,String Like){
+    public static String generateSupport(int menuid,String Like){
         return "{\"menuid\":"+menuid+",\"like\":\""+Like+"\"}";
     }
 
@@ -38,7 +38,7 @@ public class GenerateJson {
      * @param Comment   用户的评价
      * @return
      */
-    public String generatePostComment(int menuid,String Comment){
+    public static String generatePostComment(int menuid,String Comment){
         return "{\"menuid\":"+menuid+",\"comment\":\""+Comment+"@\",\"region\":\"安徽六安\"}}";
     }
 
@@ -47,7 +47,7 @@ public class GenerateJson {
      * @param menuid
      * @return
      */
-    public String generateCOmment(int menuid){
+    public static String generateCOmment(int menuid){
         return "{\"menuid\":"+menuid+"}";
     }
 
