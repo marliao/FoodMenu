@@ -27,7 +27,7 @@ public class ResolveJson {
      * 菜谱分类解析
      *
      * @param jsonStr
-     * @return 返回Sort（java Bean）：result，Types
+     * @return 返回Sort（java Bean）：result，Types集合
      * @throws JSONException
      */
     public static Sort resolveSort(String jsonStr) throws JSONException {
@@ -156,6 +156,18 @@ public class ResolveJson {
         }
         comments.setCommentList(commentList);
         return comments;
+    }
+
+    /**
+     * 解析发布评论后服务器返回的Json数据的工具类
+     * @param jsonStr
+     * @return
+     * @throws JSONException
+     */
+    public static String resolveResponseComment(String jsonStr) throws JSONException {
+        JSONObject jsonObject = new JSONObject(jsonStr);
+        String result = jsonObject.getString("result");
+        return result;
     }
 
 }

@@ -47,7 +47,7 @@ public class GenerateJson {
      * @param menuid
      * @return
      */
-    public static String generateCOmment(int menuid){
+    public static String generateComment(int menuid){
         return "{\"menuid\":"+menuid+"}";
     }
 
