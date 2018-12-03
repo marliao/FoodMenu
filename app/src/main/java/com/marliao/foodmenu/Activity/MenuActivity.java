@@ -24,6 +24,7 @@ import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.categoryTypeDao;
+import com.marliao.foodmenu.db.dao.stepDao;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Sort;
@@ -56,6 +57,7 @@ public class MenuActivity extends AppCompatActivity {
             super.handleMessage(msg);
         }
     };
+    private static int number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,10 +89,9 @@ public class MenuActivity extends AppCompatActivity {
                     String menusResult = GenerateJson.generateMenus(typeid);
                     String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
                     FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
-                    //将数据保存到数据库
+                    //将菜谱列表页数据保存到数据库
                     menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
                     instanceMenu.insertMenuList(foodMenu.getMenuList());
-
                     MyApplication.setFoodMenu(foodMenu);
 
                     Message msg = new Message();
@@ -130,8 +131,8 @@ public class MenuActivity extends AppCompatActivity {
             new Thread(){
                 @Override
                 public void run() {
-                    categoryTypeDao categoryTypeDao = new categoryTypeDao(MenuActivity.this);
-                    mTypesList = categoryTypeDao.findAll();
+                    categoryTypeDao categoryType = categoryTypeDao.getInstanceCategoryType(MenuActivity.this);
+                    mTypesList = categoryType.findAll();
                     Message msg = new Message();
                     msg.what = DATA;
                     mHandler.sendMessage(msg);
