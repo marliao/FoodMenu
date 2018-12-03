@@ -99,8 +99,11 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String yourComment = et_your_comment.getText().toString().trim();
+                et_your_comment.setText("");
                 if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
-                    et_your_comment.setText("");
+                    if (myAdapter != null) {
+                        myAdapter.notifyDataSetChanged();
+                    }
                     getConnectionForResult(yourComment);
                 } else {
                     MyApplication.showToast("评论框不能为空！");

@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -29,13 +32,13 @@ import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Steps;
 import com.marliao.foodmenu.Utils.getdrawable;
+
 import org.json.JSONException;
 
 import java.net.HttpURLConnection;
 import java.util.List;
 
 public class three_Activity extends Activity {
-
 
     private ImageView dish_Img;
     private TextView dish_name;
@@ -53,6 +56,14 @@ public class three_Activity extends Activity {
     private ImageView iv_collect;
     private TextView tv_title;
     private commentsDao mCommentsDao;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //跳转到评论页面
+            startActivity(new Intent(three_Activity.this, CommentsActivity.class));
+            super.handleMessage(msg);
+        }
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -78,22 +89,22 @@ public class three_Activity extends Activity {
 
     private void initCollect() {
         //从sp中获取value值用作回显
-        boolean flag = SpUtil.getBoolean(getApplicationContext(), MyApplication.KEY_COLLECT, false);
-        if(flag){
+        boolean flag = SpUtil.getBoolean(three_Activity.this, MyApplication.KEY_COLLECT, false);
+        if (flag) {
             iv_collect.setBackgroundResource(R.drawable.collect);
-        }else{
+        } else {
             iv_collect.setBackgroundResource(R.drawable.discollect);
         }
         iv_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean echo = SpUtil.getBoolean(getApplicationContext(), MyApplication.KEY_COLLECT, false);
-                if(!echo){
+                boolean echo = SpUtil.getBoolean(three_Activity.this, MyApplication.KEY_COLLECT, false);
+                if (!echo) {
                     iv_collect.setBackgroundResource(R.drawable.collect);
-                }else{
+                } else {
                     iv_collect.setBackgroundResource(R.drawable.discollect);
                 }
-                SpUtil.putBoolean(getApplicationContext(),MyApplication.KEY_COLLECT,!echo);
+                SpUtil.putBoolean(three_Activity.this, MyApplication.KEY_COLLECT, !echo);
             }
         });
     }
@@ -105,54 +116,52 @@ public class three_Activity extends Activity {
             public void onClick(View v) {
                 //准备评论页面的数据
                 initCommentsData();
-                //跳转到评论页面
-                startActivity(new Intent(three_Activity.this, CommentsActivity.class));
             }
         });
         //喜欢和不喜欢按钮的点击事件
-            ll_like.setOnClickListener(new View.OnClickListener() {
+        ll_like.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    //当前页面的数据
-                    if (MyApplication.like) {
-                        iv_like.setBackgroundResource(R.drawable.dislike);
-                        menu.setLikes(menu.getLikes()-1);
-                        MyApplication.showToast("喜欢人数:"+menu.getLikes());
-                    }else {
-                        iv_like.setBackgroundResource(R.drawable.like);
-                        //判断不喜欢的状态，为true变成false
-                        if(MyApplication.dislike){
-                            iv_dislike.setBackgroundResource(R.drawable.dislike);
-                            MyApplication.dislike = !MyApplication.dislike;
-                            menu.setNotlikes(menu.getNotlikes()-1);
-                        }
-                        menu.setLikes(menu.getLikes()+1);
-                        MyApplication.showToast("喜欢人数:"+menu.getLikes());
-                    }
-                    MyApplication.like = !MyApplication.like;
-                }
-            });
-            ll_dislike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
+                //当前页面的数据
+                if (MyApplication.like) {
+                    iv_like.setBackgroundResource(R.drawable.dislike);
+                    menu.setLikes(menu.getLikes() - 1);
+                    MyApplication.showToast("喜欢人数:" + menu.getLikes());
+                } else {
+                    iv_like.setBackgroundResource(R.drawable.like);
+                    //判断不喜欢的状态，为true变成false
                     if (MyApplication.dislike) {
                         iv_dislike.setBackgroundResource(R.drawable.dislike);
-                        menu.setNotlikes(menu.getNotlikes()-1);
-                        MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
-                    }else {
-                        iv_dislike.setBackgroundResource(R.drawable.like);
-                        if(MyApplication.like){
-                            iv_like.setBackgroundResource(R.drawable.dislike);
-                            MyApplication.like = !MyApplication.like;
-                            menu.setLikes(menu.getLikes()-1);
-                        }
-                        menu.setNotlikes(menu.getNotlikes()+1);
-                        MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
+                        MyApplication.dislike = !MyApplication.dislike;
+                        menu.setNotlikes(menu.getNotlikes() - 1);
                     }
-                    MyApplication.dislike = !MyApplication.dislike;
+                    menu.setLikes(menu.getLikes() + 1);
+                    MyApplication.showToast("喜欢人数:" + menu.getLikes());
                 }
-            });
+                MyApplication.like = !MyApplication.like;
+            }
+        });
+        ll_dislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (MyApplication.dislike) {
+                    iv_dislike.setBackgroundResource(R.drawable.dislike);
+                    menu.setNotlikes(menu.getNotlikes() - 1);
+                    MyApplication.showToast("不喜欢人数:" + menu.getNotlikes());
+                } else {
+                    iv_dislike.setBackgroundResource(R.drawable.like);
+                    if (MyApplication.like) {
+                        iv_like.setBackgroundResource(R.drawable.dislike);
+                        MyApplication.like = !MyApplication.like;
+                        menu.setLikes(menu.getLikes() - 1);
+                    }
+                    menu.setNotlikes(menu.getNotlikes() + 1);
+                    MyApplication.showToast("不喜欢人数:" + menu.getNotlikes());
+                }
+                MyApplication.dislike = !MyApplication.dislike;
+            }
+        });
         if (MyApplication.like) {
             try {
                 String jsonResult = GenerateJson.generateSupport(mMenuDetail.getMenu().getMenuid(), "yes");
@@ -165,7 +174,7 @@ public class three_Activity extends Activity {
                 e.printStackTrace();
             }
         }
-        if (MyApplication.dislike){
+        if (MyApplication.dislike) {
             try {
                 String jsonResult = GenerateJson.generateSupport(mMenuDetail.getMenu().getMenuid(), "no");
                 String httpResult = HttpUtils.doPost(MyApplication.pathMenuSupport, jsonResult);
@@ -184,41 +193,47 @@ public class three_Activity extends Activity {
      */
 
     private void initCommentsData() {
-        if(IsInternet.isNetworkAvalible(getApplicationContext())){
+
+        if (IsInternet.isNetworkAvalible(three_Activity.this)) {
             new Thread() {
-
-
                 @Override
                 public void run() {
                     try {
+                        Log.i("*****id", String.valueOf(mMenuDetail.getMenu().getMenuid()));
                         String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
+                        Log.i("*****jsonResult",jsonResult);
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
+                        Log.i("*****httpResult",httpResult);
                         Comments comments = ResolveJson.resolveComments(httpResult);
                         MyApplication.setComments(comments);
                         //获取数据将数据存入到数据库中
                         List<Comment> commentList = comments.getCommentList();
                         mCommentsDao.insertCommentList(commentList);
+                        mHandler.sendEmptyMessage(0);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     super.run();
                 }
             }.start();
-        }else{
-            //访问不到网络异常
-            new Thread(){
+        } else {
+            new Thread() {
                 @Override
                 public void run() {
+                    //网络异常
                     List<Comment> commentsList = mCommentsDao.findAll();
                     Comments comments = new Comments();
                     comments.setCommentList(commentsList);
                     MyApplication.setComments(comments);
+                    mHandler.sendEmptyMessage(0);
+                    super.run();
                 }
             }.start();
         }
     }
+
     private void initDate() {
-        mCommentsDao = commentsDao.getInstanceComments(getApplicationContext());
+        mCommentsDao = commentsDao.getInstanceComments(three_Activity.this);
         stepsList = MyApplication.getMenuDetail().getStepsList();
         mMenuDetail = MyApplication.getMenuDetail();
         dish_step.setAdapter(new MyAdapter());
@@ -230,7 +245,7 @@ public class three_Activity extends Activity {
         tv_title = (TextView) findViewById(R.id.tv_title);
         dish_Img = (ImageView) findViewById(R.id.dish_Img);
         menu = MyApplication.getMenuDetail().getMenu();
-        dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(),three_Activity.this));
+        dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(), three_Activity.this));
         dish_name = (TextView) findViewById(R.id.dish_name);
         dish_name.setText(menu.getMenuname());
         dish_brief = (TextView) findViewById(R.id.dish_brief);
@@ -251,7 +266,7 @@ public class three_Activity extends Activity {
             iv_like.setBackgroundResource(R.drawable.like);
             iv_dislike.setBackgroundResource(R.drawable.dislike);
         }
-        if (MyApplication.dislike){
+        if (MyApplication.dislike) {
             iv_like.setBackgroundResource(R.drawable.dislike);
             iv_dislike.setBackgroundResource(R.drawable.like);
         }
@@ -281,15 +296,15 @@ public class three_Activity extends Activity {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
                 convertView = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
-                holder.stepTittle=convertView.findViewById(R.id.text1_tittle);
+                holder.stepTittle = convertView.findViewById(R.id.text1_tittle);
                 holder.stepTittle2 = convertView.findViewById(R.id.text2_tittle);
                 holder.step_Img = convertView.findViewById(R.id.step_Img);
-                holder.dish_time=convertView.findViewById(R.id.dish_time);
+                holder.dish_time = convertView.findViewById(R.id.dish_time);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.stepTittle.setText("步骤："+getItem(position).getStepid());
+            holder.stepTittle.setText("步骤：" + getItem(position).getStepid());
             holder.stepTittle2.setText(getItem(position).getDescription());
             holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(), three_Activity.this));
             holder.dish_time.setText("10min");
