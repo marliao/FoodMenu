@@ -15,7 +15,7 @@
     <ImageView
         android:id="@+id/iv_food_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="300dp"/>
 
     <ListView
         android:id="@+id/lv_others_comments"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="发表您的评论："
-            android:textSize="20sp" />
+            android:textSize="30sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="清输入查询的城市"
-                android:singleLine="true" />
+                android:textSize="20sp"
+                android:hint="清输入查询的城市"/>
 
             <Button
                 android:id="@+id/btn_send"
