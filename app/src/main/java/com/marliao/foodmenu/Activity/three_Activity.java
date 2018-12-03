@@ -2,7 +2,9 @@ package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,36 +19,38 @@ import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
-
+import com.marliao.foodmenu.db.doman.Steps;
+import com.marliao.foodmenu.Utils.getdrawable;
 import org.json.JSONException;
 
 import java.net.HttpURLConnection;
+import java.util.List;
 
 public class three_Activity extends Activity {
+
 
     private ImageView dish_Img;
     private TextView dish_name;
     private TextView dish_brief;
     private TextView dish_list;
     private ListView dish_step;
-    private int[] dishImg;
-    private String[] stepCourse;
-    private String[] stepName;
-    private String[] dishTime;
-    private MenuDetail mMenuDetail;
     private LinearLayout ll_comment;
     private LinearLayout ll_like;
     private ImageView iv_like;
     private LinearLayout ll_dislike;
     private ImageView iv_dislike;
+    private List<Steps> stepsList;
+    private Menu menu;
+    private MenuDetail mMenuDetail;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three_menu);
         intinUI();
-
         //制作步骤
         initDate();
 
@@ -139,22 +143,24 @@ public class three_Activity extends Activity {
     }
 
     private void initDate() {
+        stepsList = MyApplication.getMenuDetail().getStepsList();
         mMenuDetail = MyApplication.getMenuDetail();
 
-
-        dishImg = new int[]{R.drawable.home_trojan, R.drawable.home_trojan,
-                R.drawable.home_trojan, R.drawable.home_trojan,
-                R.drawable.home_trojan};
-        dishTime = new String[]{"10min", "10min", "10min", "10min", "10min", "10min",};
-//        dish_step.setAdapter(new MyAdapter());
+        dish_step.setAdapter(new MyAdapter());
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void intinUI() {
         dish_Img = (ImageView) findViewById(R.id.dish_Img);
+        menu = MyApplication.getMenuDetail().getMenu();
+        dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(),three_Activity.this));
         dish_name = (TextView) findViewById(R.id.dish_name);
+        dish_name.setText(menu.getMenuname());
         dish_brief = (TextView) findViewById(R.id.dish_brief);
+        dish_brief.setText(menu.getMainmaterial());
         dish_list = (TextView) findViewById(R.id.dish_list);
+        dish_list.setText(menu.getAbstracts());
         dish_step = (ListView) findViewById(R.id.dish_step);
 
         //下方三个按钮的控件
@@ -174,14 +180,15 @@ public class three_Activity extends Activity {
     }
 
     private class MyAdapter extends BaseAdapter {
+
         @Override
         public int getCount() {
-            return stepName.length;
+            return stepsList.size();
         }
 
         @Override
-        public Object getItem(int position) {
-            return stepName[position];
+        public Steps getItem(int position) {
+            return stepsList.get(position);
         }
 
         @Override
@@ -189,18 +196,33 @@ public class three_Activity extends Activity {
             return position;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
-            TextView stepTittle = (TextView) view.findViewById(R.id.text1_tittle);
-            TextView stepTittle2 = (TextView) view.findViewById(R.id.text2_tittle);
-            ImageView step_Img = (ImageView) view.findViewById(R.id.step_Img);
-            TextView time = (TextView) view.findViewById(R.id.time);
-            stepTittle.setText(stepName[position]);
-            stepTittle2.setText(stepCourse[position]);
-            step_Img.setBackgroundResource(dishImg[position]);
-            time.setText(dishTime[position]);
-            return view;
+            ViewHolder holder = new ViewHolder();
+            if (convertView == null) {
+                convertView = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
+                holder.stepTittle=convertView.findViewById(R.id.text1_tittle);
+                holder.stepTittle2 = convertView.findViewById(R.id.text2_tittle);
+                holder.step_Img = convertView.findViewById(R.id.step_Img);
+                holder.dish_time=convertView.findViewById(R.id.dish_time);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.stepTittle.setText("步骤："+getItem(position).getStepid());
+            holder.stepTittle2.setText(getItem(position).getDescription());
+            holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(), three_Activity.this));
+            holder.dish_time.setText("10min");
+            return convertView;
         }
     }
+
+    class ViewHolder {
+        TextView stepTittle;
+        TextView stepTittle2;
+        ImageView step_Img;
+        TextView dish_time;
+    }
+
 }
