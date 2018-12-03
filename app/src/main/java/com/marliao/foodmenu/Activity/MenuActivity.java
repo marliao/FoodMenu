@@ -99,7 +99,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        if (mNetworkAvalible) {
+//        if (mNetworkAvalible) {
             new Thread() {
                 @Override
                 public void run() {
@@ -108,6 +108,7 @@ public class MenuActivity extends AppCompatActivity {
                         Sort resolveSort = ResolveJson.resolveSort(httpResult);
                         MyApplication.setSort(resolveSort);
                         mTypesList = resolveSort.getTypesList();
+                        initdb();
                         Message msg = new Message();
                         msg.what = DATA;
                         mHandler.sendMessage(msg);
@@ -118,21 +119,20 @@ public class MenuActivity extends AppCompatActivity {
             }.start();
             Log.i("**************","有网络状态");
             //将数据存入数据库
-            initdb();
-        }else {
-            new Thread(){
-                @Override
-                public void run() {
-                    categoryTypeDao categoryTypeDao = new categoryTypeDao(MenuActivity.this);
-                    mTypesList = categoryTypeDao.findAll();
-                    Message msg = new Message();
-                    msg.what = DATA;
-                    mHandler.sendMessage(msg);
-                    super.run();
-                }
-            }.start();
-            Log.i("**************","无网络状态");
-        }
+//        }else {
+//            new Thread(){
+//                @Override
+//                public void run() {
+//                    categoryTypeDao categoryTypeDao = new categoryTypeDao(MenuActivity.this);
+//                    mTypesList = categoryTypeDao.findAll();
+//                    Message msg = new Message();
+//                    msg.what = DATA;
+//                    mHandler.sendMessage(msg);
+//                    super.run();
+//                }
+//            }.start();
+//            Log.i("**************","无网络状态");
+//        }
     }
 
     private void initUI() {
