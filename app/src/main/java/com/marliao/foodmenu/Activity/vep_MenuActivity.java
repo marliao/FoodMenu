@@ -21,9 +21,11 @@ import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
+import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.menuDao;
+import com.marliao.foodmenu.db.dao.stepDao;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
@@ -44,23 +46,26 @@ public class vep_MenuActivity extends Activity {
     private List<Menu> menuList;
     private int menuCount = 10;
     private boolean mIsLoad = true;
-    Handler  handler = new Handler(){
+        Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            startActivity(new Intent(getApplicationContext(),three_Activity.class));
+            startActivity(new Intent(getApplicationContext(), three_Activity.class));
         }
     };
     private menuDao mMenuDao;
     private TextView tv_title;
+    private stepDao step;
+    private List<Steps> stepList;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vep_menu);
         green_name = (ListView) findViewById(R.id.greens_name);
         mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
         intiDate();
         InitTitle();
+
     }
 
     //通过id给标题进行设置
@@ -81,21 +86,35 @@ public class vep_MenuActivity extends Activity {
         green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if(position == 0){
-                    System.out.println("第一个条目可以点击");
-                }
-                new Thread(){
-                    @Override
-                    public void run() {
-                        String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(position));
-                        try {
-                            MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
-                            handler.sendEmptyMessage(0);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                if (IsInternet.isNetworkAvalible(getApplicationContext())) {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                int menuid = menuList.get(position).getMenuid();
+                                String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
+                                MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
+                                System.out.println("第一个条目可以在子线程中点击");
+                                handler.sendEmptyMessage(0);
+                            } catch (JSONException e) {
+                                System.out.println("发生了异常");
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                }.start();
+                    }.start();
+                } else {
+                    //获取数据库的数据
+                    step = stepDao.getInstanceStep(getApplicationContext());
+                    stepList = step.findAll();
+                    //获取当前点击的menu数据
+                    Menu menu = MyApplication.getFoodMenu().getMenuList().get(position);
+                    //创建一个MenuDetail对象存入数据
+                    MenuDetail detail = new MenuDetail();
+                    detail.setMenu(menu);
+                    detail.setStepsList(stepList);
+                    MyApplication.setMenuDetail(detail);
+                    System.out.println("menu对象数据为:-----------------------" + menu);
+                }
             }
         });
 
@@ -103,14 +122,14 @@ public class vep_MenuActivity extends Activity {
         green_name.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    //条件一:滚动到停止状态
-                    //条件二:最后一个条目可见(最后一个条目的索引值>=数据适配器中集合的总条目个数-1)
-                    if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-                            && green_name.getLastVisiblePosition()>=menuCount-1){
-                        menuCount+= 15;
-                        myAdapter.notifyDataSetChanged();
-                        System.out.println("触发menuCount:"+menuCount);
-                    }
+                //条件一:滚动到停止状态
+                //条件二:最后一个条目可见(最后一个条目的索引值>=数据适配器中集合的总条目个数-1)
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        && green_name.getLastVisiblePosition() >= menuCount - 1) {
+                    menuCount += 15;
+                    myAdapter.notifyDataSetChanged();
+                    System.out.println("触发menuCount:" + menuCount);
+                }
             }
 
             @Override
@@ -121,13 +140,12 @@ public class vep_MenuActivity extends Activity {
     }
 
 
-
     private class MyAdapter extends BaseAdapter {
         @Override
-        public int getCount(){
-            if(menuCount < menuList.size()){
+        public int getCount() {
+            if (menuCount < menuList.size()) {
                 return menuCount;
-            }else{
+            } else {
                 return menuList.size();
             }
         }
@@ -144,28 +162,28 @@ public class vep_MenuActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(position>16){
-                System.out.println("position"+position);
+            if (position > 16) {
+                System.out.println("position" + position);
             }
             ViewHolder holder = null;
-            if(convertView == null){
+            if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = View.inflate(getApplicationContext(),R.layout.greens_menu_name,null);
+                convertView = View.inflate(getApplicationContext(), R.layout.greens_menu_name, null);
                 holder.img1 = (ImageView) convertView.findViewById(R.id.img1);
                 holder.menu_name = (TextView) convertView.findViewById(R.id.menu_name);
                 convertView.setTag(holder);
-            }else{
-                holder  = (ViewHolder) convertView.getTag();
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
             Menu item = getItem(position);
             holder.menu_name.setText(item.getMenuname());
             String spic = item.getSpic();
             System.out.println(spic);
-            holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic,vep_MenuActivity.this));
+            holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic, vep_MenuActivity.this));
             return convertView;
         }
 
-        class ViewHolder{
+        class ViewHolder {
             private ImageView img1;
             private TextView menu_name;
         }

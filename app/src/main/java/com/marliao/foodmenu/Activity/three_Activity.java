@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
@@ -73,27 +74,26 @@ public class three_Activity extends Activity {
             ll_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MyApplication.like = !MyApplication.like;
                     if (MyApplication.like) {
-                        iv_like.setBackgroundResource(R.drawable.dislike);
-                        iv_dislike.setBackgroundResource(R.drawable.like);
-                    }else {
                         iv_like.setBackgroundResource(R.drawable.like);
                         iv_dislike.setBackgroundResource(R.drawable.dislike);
+                    }else {
+                        iv_like.setBackgroundResource(R.drawable.dislike);
                     }
-                    MyApplication.like = !MyApplication.like;
+
                 }
             });
             ll_dislike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MyApplication.dislike = !MyApplication.dislike;
                     if (MyApplication.dislike) {
-                        iv_dislike.setBackgroundResource(R.drawable.dislike);
-                        iv_like.setBackgroundResource(R.drawable.like);
-                    }else {
                         iv_dislike.setBackgroundResource(R.drawable.like);
                         iv_like.setBackgroundResource(R.drawable.dislike);
+                    }else {
+                        iv_dislike.setBackgroundResource(R.drawable.dislike);
                     }
-                    MyApplication.dislike = !MyApplication.dislike;
                 }
             });
         if (MyApplication.like) {
@@ -172,9 +172,11 @@ public class three_Activity extends Activity {
 
         if (MyApplication.like) {
             iv_like.setBackgroundResource(R.drawable.like);
+            iv_dislike.setBackgroundResource(R.drawable.dislike);
         }
         if (MyApplication.dislike) {
-            iv_like.setBackgroundResource(R.drawable.like);
+            iv_like.setBackgroundResource(R.drawable.dislike);
+            iv_dislike.setBackgroundResource(R.drawable.like);
         }
 
     }
