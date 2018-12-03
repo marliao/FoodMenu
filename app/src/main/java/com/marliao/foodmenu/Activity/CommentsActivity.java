@@ -19,8 +19,10 @@ import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.Ptime;
@@ -73,6 +75,8 @@ public class CommentsActivity extends AppCompatActivity {
         mCommentList = comments.getCommentList();
         MenuDetail menuDetail = MyApplication.getMenuDetail();
         mMenu = menuDetail.getMenu();
+        tv_food_comments.setText(mMenu.getMenuname()+"的评论");
+        iv_food_image.setBackgroundDrawable(getdrawable.getdrawable(mMenu.getSpic(),CommentsActivity.this));
     }
 
     private void sendComment() {
@@ -129,7 +133,6 @@ public class CommentsActivity extends AppCompatActivity {
         lv_others_comments = (ListView) findViewById(R.id.lv_others_comments);
         et_your_comment = (EditText) findViewById(R.id.et_your_comment);
         btn_send = (Button) findViewById(R.id.btn_send);
-        //给控件设置值
     }
 
     private class MyAdapter extends BaseAdapter {
