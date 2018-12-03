@@ -18,8 +18,12 @@ import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
+import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SpUtil;
+import com.marliao.foodmenu.db.dao.commentsDao;
+import com.marliao.foodmenu.db.dao.stepDao;
+import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
@@ -48,6 +52,7 @@ public class three_Activity extends Activity {
     private MenuDetail mMenuDetail;
     private ImageView iv_collect;
     private TextView tv_title;
+    private commentsDao mCommentsDao;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -106,27 +111,46 @@ public class three_Activity extends Activity {
         });
         //喜欢和不喜欢按钮的点击事件
             ll_like.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
-                    MyApplication.like = !MyApplication.like;
+                    //当前页面的数据
                     if (MyApplication.like) {
-                        iv_like.setBackgroundResource(R.drawable.like);
-                        iv_dislike.setBackgroundResource(R.drawable.dislike);
-                    }else {
                         iv_like.setBackgroundResource(R.drawable.dislike);
+                        menu.setLikes(menu.getLikes()-1);
+                        MyApplication.showToast("喜欢人数:"+menu.getLikes());
+                    }else {
+                        iv_like.setBackgroundResource(R.drawable.like);
+                        //判断不喜欢的状态，为true变成false
+                        if(MyApplication.dislike){
+                            iv_dislike.setBackgroundResource(R.drawable.dislike);
+                            MyApplication.dislike = !MyApplication.dislike;
+                            menu.setNotlikes(menu.getNotlikes()-1);
+                        }
+                        menu.setLikes(menu.getLikes()+1);
+                        MyApplication.showToast("喜欢人数:"+menu.getLikes());
                     }
+                    MyApplication.like = !MyApplication.like;
                 }
             });
             ll_dislike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MyApplication.dislike = !MyApplication.dislike;
                     if (MyApplication.dislike) {
-                        iv_dislike.setBackgroundResource(R.drawable.like);
-                        iv_like.setBackgroundResource(R.drawable.dislike);
-                    }else {
                         iv_dislike.setBackgroundResource(R.drawable.dislike);
+                        menu.setNotlikes(menu.getNotlikes()-1);
+                        MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
+                    }else {
+                        iv_dislike.setBackgroundResource(R.drawable.like);
+                        if(MyApplication.like){
+                            iv_like.setBackgroundResource(R.drawable.dislike);
+                            MyApplication.like = !MyApplication.like;
+                            menu.setLikes(menu.getLikes()-1);
+                        }
+                        menu.setNotlikes(menu.getNotlikes()+1);
+                        MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
                     }
+                    MyApplication.dislike = !MyApplication.dislike;
                 }
             });
         if (MyApplication.like) {
@@ -160,22 +184,41 @@ public class three_Activity extends Activity {
      */
 
     private void initCommentsData() {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
-                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
-                    Comments comments = ResolveJson.resolveComments(httpResult);
-                    MyApplication.setComments(comments);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(IsInternet.isNetworkAvalible(getApplicationContext())){
+            new Thread() {
+
+
+                @Override
+                public void run() {
+                    try {
+                        String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
+                        String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
+                        Comments comments = ResolveJson.resolveComments(httpResult);
+                        MyApplication.setComments(comments);
+                        //获取数据将数据存入到数据库中
+                        List<Comment> commentList = comments.getCommentList();
+                        mCommentsDao.insertCommentList(commentList);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    super.run();
                 }
-                super.run();
-            }
-        }.start();
+            }.start();
+        }else{
+            //访问不到网络异常
+            new Thread(){
+                @Override
+                public void run() {
+                    List<Comment> commentsList = mCommentsDao.findAll();
+                    Comments comments = new Comments();
+                    comments.setCommentList(commentsList);
+                    MyApplication.setComments(comments);
+                }
+            }.start();
+        }
     }
     private void initDate() {
+        mCommentsDao = commentsDao.getInstanceComments(getApplicationContext());
         stepsList = MyApplication.getMenuDetail().getStepsList();
         mMenuDetail = MyApplication.getMenuDetail();
         dish_step.setAdapter(new MyAdapter());
