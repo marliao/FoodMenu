@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.marliao.foodmenu.R;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
@@ -29,9 +32,12 @@ import org.json.JSONException;
 import java.net.HttpURLConnection;
 import java.util.List;
 
+import javax.net.ssl.HandshakeCompletedListener;
+
 public class three_Activity extends Activity {
 
 
+    private static final int DATA = 100;
     private ImageView dish_Img;
     private TextView dish_name;
     private TextView dish_brief;
@@ -45,6 +51,20 @@ public class three_Activity extends Activity {
     private List<Steps> stepsList;
     private Menu menu;
     private MenuDetail mMenuDetail;
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case DATA:
+                    Comments comments = (Comments) msg.obj;
+                    MyApplication.setComments(comments);
+                    //跳转到评论页面
+                    startActivity(new Intent(three_Activity.this, CommentsActivity.class));
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -54,7 +74,6 @@ public class three_Activity extends Activity {
         intinUI();
         //制作步骤
         initDate();
-
         //下方三个点击事件
         initFootClick();
     }
@@ -66,8 +85,6 @@ public class three_Activity extends Activity {
             public void onClick(View v) {
                 //准备评论页面的数据
                 initCommentsData();
-                //跳转到评论页面
-                startActivity(new Intent(three_Activity.this, CommentsActivity.class));
             }
         });
         //喜欢和不喜欢按钮的点击事件
@@ -133,7 +150,10 @@ public class three_Activity extends Activity {
                     String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
                     String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
                     Comments comments = ResolveJson.resolveComments(httpResult);
-                    MyApplication.setComments(comments);
+                    Message msg = new Message();
+                    msg.what=DATA;
+                    msg.obj=comments;
+                    mHandler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -145,9 +165,7 @@ public class three_Activity extends Activity {
     private void initDate() {
         stepsList = MyApplication.getMenuDetail().getStepsList();
         mMenuDetail = MyApplication.getMenuDetail();
-
         dish_step.setAdapter(new MyAdapter());
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
