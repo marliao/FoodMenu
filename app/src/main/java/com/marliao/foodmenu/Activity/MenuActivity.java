@@ -99,6 +99,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        mNetworkAvalible = IsInternet.isNetworkAvalible(MenuActivity.this);
         if (mNetworkAvalible) {
             new Thread() {
                 @Override
@@ -108,6 +109,7 @@ public class MenuActivity extends AppCompatActivity {
                         Sort resolveSort = ResolveJson.resolveSort(httpResult);
                         MyApplication.setSort(resolveSort);
                         mTypesList = resolveSort.getTypesList();
+                        initdb();
                         Message msg = new Message();
                         msg.what = DATA;
                         mHandler.sendMessage(msg);
@@ -118,7 +120,6 @@ public class MenuActivity extends AppCompatActivity {
             }.start();
             Log.i("**************","有网络状态");
             //将数据存入数据库
-            initdb();
         }else {
             new Thread(){
                 @Override
