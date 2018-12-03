@@ -35,11 +35,11 @@ public class GenerateJson {
     /**
      * 用户发布评论的Json字符串
      * @param menuid    菜品编号
-     * @param Comment   用户的评价
+     * @param comment   用户的评价
      * @return
      */
-    public static String generatePostComment(int menuid,String Comment){
-        return "{\"menuid\":"+menuid+",\"comment\":\""+Comment+"@\",\"region\":\"安徽六安\"}}";
+    public static String generatePostComment(int menuid,String comment){
+        return "{\"menuid\":"+menuid+",\"comment\":\""+comment+"@\",\"region\":\"安徽六安\"}";
     }
 
     /**

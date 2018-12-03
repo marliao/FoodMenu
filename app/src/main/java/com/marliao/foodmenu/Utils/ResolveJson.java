@@ -139,6 +139,8 @@ public class ResolveJson {
             Comment comment = new Comment();
             comment.setMenuid(jsonComment.getJSONObject(i).getInt("menuid"));
             comment.setRegion(jsonComment.getJSONObject(i).getString("region"));
+            comment.setContent(jsonComment.getJSONObject(i).getString("content"));
+            comment.setCid(jsonComment.getJSONObject(i).getInt("cid"));
             JSONObject jsonPtime = jsonComment.getJSONObject(i).getJSONObject("ptime");
             Ptime ptime = new Ptime();
             ptime.setDate(jsonPtime.getString("date"));
