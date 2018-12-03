@@ -9,16 +9,17 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/tv_title"
             style="@style/head_page"
             android:text="北京烤鸭" />
 
         <ImageView
+            android:layout_margin="7dp"
             android:id="@+id/iv_collect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
             android:layout_alignParentRight="true"
             android:background="#0784eb"
-            android:padding="14dp"
             android:scaleX="3"
             android:scaleY="3"
             android:src="@android:drawable/star_off" />

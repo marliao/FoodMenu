@@ -112,7 +112,7 @@ public class menuDao {
     public List<Menu> findLimit(Integer menuid){
         List<Menu> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select * from menu limit ?,7;",new String[]{menuid+""});
+        Cursor cursor = db.rawQuery("select * from menu limit ?,15;",new String[]{menuid+""});
         while(cursor.moveToNext()){
             if(list == null)list = new ArrayList<Menu>();
             Menu menu = new Menu();

@@ -30,6 +30,9 @@ public class MyApplication extends Application {
     public static Context context;
     public static Toast toast;
 
+    public static final String KEY_COLLECT ="key_collect" ;
+
+
     public static FoodMenu getFoodMenu() {
         return foodMenu;
     }
