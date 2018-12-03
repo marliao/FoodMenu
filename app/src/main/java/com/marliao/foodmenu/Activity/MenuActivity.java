@@ -33,6 +33,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
+import com.marliao.foodmenu.db.dao.menuDao;
 public class MenuActivity extends AppCompatActivity {
 
     private static final int DATA = 100;
@@ -86,7 +87,12 @@ public class MenuActivity extends AppCompatActivity {
                     String menusResult = GenerateJson.generateMenus(typeid);
                     String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
                     FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
+                    //将数据保存到数据库
+                    menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
+                    instanceMenu.insertMenuList(foodMenu.getMenuList());
+
                     MyApplication.setFoodMenu(foodMenu);
+
                     Message msg = new Message();
                     msg.what = MENULIST;
                     mHandler.sendMessage(msg);
@@ -133,6 +139,7 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }.start();
             Log.i("**************","无网络状态");
+            MyApplication.showToast("无网络连接");
         }
     }
 
