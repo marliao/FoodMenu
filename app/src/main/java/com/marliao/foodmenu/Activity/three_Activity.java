@@ -45,7 +45,6 @@ public class three_Activity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three_menu);
-        System.out.println(MyApplication.getMenuDetail().getResult());
         intinUI();
 
         //制作步骤

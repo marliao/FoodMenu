@@ -2,11 +2,14 @@ package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -25,6 +28,7 @@ import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Steps;
+import com.marliao.foodmenu.db.doman.Types;
 
 import org.json.JSONException;
 
@@ -35,18 +39,19 @@ import java.util.List;
  */
 public class vep_MenuActivity extends Activity {
 
+    private static final String TAG = "vep_MenuActivity";
     private ListView green_name;
     private List<Menu> menuList;
+    private int menuCount = 10;
+    private boolean mIsLoad = true;
     Handler  handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             startActivity(new Intent(getApplicationContext(),three_Activity.class));
         }
     };
-    private List<Menu> menuListAll;
     private menuDao mMenuDao;
-    private Button bt_pageUp;
-    private Button bt_pageNext;
+    private TextView tv_title;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -54,25 +59,31 @@ public class vep_MenuActivity extends Activity {
         setContentView(R.layout.activity_vep_menu);
         green_name = (ListView) findViewById(R.id.greens_name);
         mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
-        bt_pageUp = (Button) findViewById(R.id.bt_pageUp);
-        bt_pageNext = (Button) findViewById(R.id.bt_pageNext);
         intiDate();
         InitTitle();
     }
 
+    //通过id给标题进行设置
     private void InitTitle() {
-        int typeid = menuListAll.get(0).getTypeid();
+        tv_title = (TextView) findViewById(R.id.tv_title);
+        int typeid = menuList.get(0).getTypeid();
+        List<Types> typesList = MyApplication.getSort().getTypesList();
+        String typename = typesList.get(typeid - 1).getTypename();
+        tv_title.setText(typename);
     }
 
     private void intiDate() {
         FoodMenu foodMenu = MyApplication.getFoodMenu();
-        menuListAll = foodMenu.getMenuList();
-        useMenudb();
-        green_name.setAdapter(new MyAdapter());
+        menuList = foodMenu.getMenuList();
+        final MyAdapter myAdapter = new MyAdapter();
+        green_name.setAdapter(myAdapter);
         //给条目设置一个点击事件
         green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                if(position == 0){
+                    System.out.println("第一个条目可以点击");
+                }
                 new Thread(){
                     @Override
                     public void run() {
@@ -87,20 +98,38 @@ public class vep_MenuActivity extends Activity {
                 }.start();
             }
         });
+
+        //设置滚动事件
+        green_name.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    //条件一:滚动到停止状态
+                    //条件二:最后一个条目可见(最后一个条目的索引值>=数据适配器中集合的总条目个数-1)
+                    if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                            && green_name.getLastVisiblePosition()>=menuCount-1){
+                        menuCount+= 15;
+                        myAdapter.notifyDataSetChanged();
+                        System.out.println("触发menuCount:"+menuCount);
+                    }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
-    private void useMenudb() {
-        //将获取的数据存入到数据库中
-        mMenuDao.insertMenuList(menuListAll);
-        //进行分页查询
-        menuList = mMenuDao.findLimit(0);
-    }
+
 
     private class MyAdapter extends BaseAdapter {
         @Override
-        public int getCount()
-        {
-            return menuList.size();
+        public int getCount(){
+            if(menuCount < menuList.size()){
+                return menuCount;
+            }else{
+                return menuList.size();
+            }
         }
 
         @Override
@@ -115,6 +144,9 @@ public class vep_MenuActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            if(position>16){
+                System.out.println("position"+position);
+            }
             ViewHolder holder = null;
             if(convertView == null){
                 holder = new ViewHolder();
