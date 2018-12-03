@@ -199,11 +199,8 @@ public class three_Activity extends Activity {
                 @Override
                 public void run() {
                     try {
-                        Log.i("*****id", String.valueOf(mMenuDetail.getMenu().getMenuid()));
                         String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
-                        Log.i("*****jsonResult",jsonResult);
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
-                        Log.i("*****httpResult",httpResult);
                         Comments comments = ResolveJson.resolveComments(httpResult);
                         MyApplication.setComments(comments);
                         //获取数据将数据存入到数据库中

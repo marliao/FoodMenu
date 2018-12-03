@@ -117,13 +117,9 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    Log.i("******yourcomment*****", yourComment);
                     String generateComment = GenerateJson.generatePostComment(mMenu.getMenuid(), yourComment);
-                    Log.i("*****generateComment**", generateComment);
                     String httpResult = HttpUtils.doPost(MyApplication.pathMenuPostComment, generateComment);
-                    Log.i("******httpResult*****", httpResult);
                     String responseResult = ResolveJson.resolveResponseComment(httpResult);
-                    Log.i("****responseResult***", responseResult);
                     Message msg = new Message();
                     msg.what = CONNENCTION_OK;
                     msg.obj = responseResult;
