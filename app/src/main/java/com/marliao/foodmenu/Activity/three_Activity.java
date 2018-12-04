@@ -209,6 +209,8 @@ public class three_Activity extends Activity {
                         MyApplication.setComments(comments);
                         //获取数据将数据存入到数 据库中
                         List<Comment> commentList = comments.getCommentList();
+                        int deleteAll = mCommentsDao.deleteCommentsAll();
+                        System.out.println("删除了"+deleteAll+"行");
                         mCommentsDao.insertCommentList(commentList);
                     } catch (JSONException e) {
                         e.printStackTrace();
