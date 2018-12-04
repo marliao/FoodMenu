@@ -94,11 +94,12 @@ public class vep_MenuActivity extends Activity {
                         @Override
                         public void run() {
                             try {
-
                                 int menuid = menuList.get(position).getMenuid();
                                 String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
                                 MenuDetail menuDetail = ResolveJson.resolveMenuDetail(json);
                                 //将数据存入到数据库中
+                                int deleteAll = mStepDao.deleteStepAll();
+                                System.out.println("清楚了"+deleteAll+"行");
                                 mStepDao.insertStepList(menuDetail.getStepsList());
                                 MyApplication.setMenuDetail(menuDetail);
                                 System.out.println("第一个条目可以在子线程中点击");
