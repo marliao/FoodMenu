@@ -1,6 +1,8 @@
 package com.marliao.foodmenu.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,6 +66,7 @@ public class MenuActivity extends AppCompatActivity {
     };
     private Button bt_cellect;
     private Button bt_function;
+    private ImageView img_one;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,12 @@ public class MenuActivity extends AppCompatActivity {
         initData();
         //扩展点击功能
         initCellect();
+        // 实现首页图片轮播功能
+        initHomePage();
+    }
+
+    private void initHomePage() {
+
     }
 
     private void initCellect() {
@@ -262,9 +271,18 @@ public class MenuActivity extends AppCompatActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(),MenuActivity.this));
+            String fileName = getItem(position).getTypename() + position;
+            if(mNetworkAvalible){
+                holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(),MenuActivity.this));
+                //将图片本地化
+                SaveDrawableUtil.putDrawable(getApplicationContext(),
+                        getItem(position).getTypepic(),fileName);
+            }else{
+                //从本地获取图片
+                Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
+                holder.img.setImageBitmap(bitmap);
+            }
             holder.Itext.setText(getItem(position).getTypename());
-
 
             //设置长按点击事件
             holder.img.setOnLongClickListener(new View.OnLongClickListener() {
