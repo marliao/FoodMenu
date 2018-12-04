@@ -12,16 +12,16 @@ import com.marliao.foodmenu.db.doman.Sort;
 public class MyApplication extends Application {
 
 
-    public static final String pathMenuTypes="http://192.168.1.101:8080/menu/types";
-    public static final String pathMenuMenus="http://192.168.1.101:8080/menu/menus";
-    public static final String pathMenuDetail="http://192.168.1.101:8080/menu/menuDetail";
-    public static final String pathMenuSupport="http://192.168.1.101:8080/menu/support";
-    public static final String pathMenuComments="http://192.168.1.101:8080/menu/comments";
-    public static final String pathMenuPostComment="http://192.168.1.101:8080/menu/postComment";
-    public static final String Http="http://192.168.1.101:8080/menu/";
+    public static final String pathMenuTypes = "http://192.168.1.101:8080/menu/types";
+    public static final String pathMenuMenus = "http://192.168.1.101:8080/menu/menus";
+    public static final String pathMenuDetail = "http://192.168.1.101:8080/menu/menuDetail";
+    public static final String pathMenuSupport = "http://192.168.1.101:8080/menu/support";
+    public static final String pathMenuComments = "http://192.168.1.101:8080/menu/comments";
+    public static final String pathMenuPostComment = "http://192.168.1.101:8080/menu/postComment";
+    public static final String Http = "http://192.168.1.101:8080/menu/";
 
-    public static boolean like=false;
-    public static boolean dislike=false;
+    public static boolean like = false;
+    public static boolean dislike = false;
 
     private static Comments comments;
     private static FoodMenu foodMenu;
@@ -31,7 +31,7 @@ public class MyApplication extends Application {
     public static Context context;
     public static Toast toast;
 
-    public static final String KEY_COLLECT ="key_collect" ;
+    public static final String KEY_COLLECT = "key_collect";
 
 
     public static FoodMenu getFoodMenu() {

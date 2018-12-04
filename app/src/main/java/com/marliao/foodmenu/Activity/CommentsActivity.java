@@ -1,14 +1,10 @@
 package com.marliao.foodmenu.Activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,7 +16,6 @@ import android.widget.TextView;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
-import com.marliao.foodmenu.Utils.DownPhotoUtil;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
@@ -56,7 +51,7 @@ public class CommentsActivity extends AppCompatActivity {
                     myAdapter = new MyAdapter(mCommentList);
                     if (myAdapter != null) {
                         lv_others_comments.setAdapter(myAdapter);
-                    }else {
+                    } else {
                         myAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -97,13 +92,13 @@ public class CommentsActivity extends AppCompatActivity {
         iv_food_image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                String url=MyApplication.Http+mMenu.getSpic();
-                SaveDrawableUtil.longPressClick(url,CommentsActivity.this);
+                String url = MyApplication.Http + mMenu.getSpic();
+                SaveDrawableUtil.longPressClick(url, CommentsActivity.this);
                 return true;
             }
         });
         Message msg = new Message();
-        msg.what=DATA;
+        msg.what = DATA;
         mHandler.sendMessage(msg);
 
     }
@@ -157,7 +152,7 @@ public class CommentsActivity extends AppCompatActivity {
                     String commentResult = GenerateJson.generateComment(mMenu.getMenuid());
                     String jsonResult = HttpUtils.doPost(MyApplication.pathMenuComments, commentResult);
                     Comments comments = ResolveJson.resolveComments(jsonResult);
-                     mCommentList=comments.getCommentList();
+                    mCommentList = comments.getCommentList();
                     Message msg = new Message();
                     msg.what = DATA;
                     mHandler.sendMessage(msg);
