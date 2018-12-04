@@ -33,7 +33,6 @@
         <activity android:name=".Activity.MoreFunctionActivity" />
         <activity android:name=".Activity.UserHelpActivity" />
         <activity android:name=".Activity.CreateManActivity" />
-        <activity android:name=".Activity.MainPageActivity" />
         <activity android:name=".Activity.AppInfoActivity"></activity>
     </application>
 
