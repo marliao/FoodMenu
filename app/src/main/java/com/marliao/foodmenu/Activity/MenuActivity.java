@@ -67,6 +67,7 @@ public class MenuActivity extends AppCompatActivity {
     private Button bt_cellect;
     private Button bt_function;
     private ImageView img_one;
+    private menuDao mMenuDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,22 +100,22 @@ public class MenuActivity extends AppCompatActivity {
         bt_function.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),MoreFunctionActivity.class));
+                startActivity(new Intent(getApplicationContext(), MoreFunctionActivity.class));
             }
         });
     }
 
     //准备收藏数据
     private void prepareData() {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 EchoDao echoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
                 menuDao menuD = menuDao.getInstanceMenu(getApplicationContext());
                 List<Menu> menuList = new ArrayList<Menu>();
                 List<Echo> echoList = echoDao.findAll();
-                for(Echo echo : echoList){
-                    if(echo.getIsColleck() == 1){
+                for (Echo echo : echoList) {
+                    if (echo.getIsColleck() == 1) {
                         Menu menu = menuD.findByID(echo.getMenuid());
                         menuList.add(menu);
                     }
@@ -149,28 +150,40 @@ public class MenuActivity extends AppCompatActivity {
      * @param typeid
      */
     private void getMenuList(final int typeid) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    String menusResult = GenerateJson.generateMenus(typeid);
-                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
-                    FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
-                    //将菜谱列表页数据保存到数据库
-                    menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
-                    instanceMenu.deleteMenuAll();
-                    instanceMenu.insertMenuList(foodMenu.getMenuList());
-                    MyApplication.setFoodMenu(foodMenu);
-
-                    Message msg = new Message();
-                    msg.what = MENULIST;
-                    mHandler.sendMessage(msg);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if (mNetworkAvalible) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        String menusResult = GenerateJson.generateMenus(typeid);
+                        String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
+                        FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
+                        //将菜谱列表页数据保存到数据库
+                        menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
+                        instanceMenu.deleteMenuAll();
+                        instanceMenu.insertMenuList(foodMenu.getMenuList());
+                        MyApplication.setFoodMenu(foodMenu);
+                        Message msg = new Message();
+                        msg.what = MENULIST;
+                        mHandler.sendMessage(msg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    super.run();
                 }
-                super.run();
-            }
-        }.start();
+            }.start();
+        } else {
+            mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
+            List<Menu> menuList = mMenuDao.findAll();
+            System.out.println(menuList);
+            FoodMenu foodMenu = new FoodMenu();
+            foodMenu.setMenuList(menuList);
+            foodMenu.setResult("menu");
+            MyApplication.setFoodMenu(foodMenu);
+            Message msg = new Message();
+            msg.what = MENULIST;
+            mHandler.sendMessage(msg);
+        }
     }
 
     private void initData() {
@@ -193,10 +206,10 @@ public class MenuActivity extends AppCompatActivity {
                     }
                 }
             }.start();
-            Log.i("**************","有网络状态");
+            Log.i("**************", "有网络状态");
             //将数据存入数据库
-        }else {
-            new Thread(){
+        } else {
+            new Thread() {
                 @Override
                 public void run() {
                     categoryTypeDao categoryType = categoryTypeDao.getInstanceCategoryType(MenuActivity.this);
@@ -207,7 +220,7 @@ public class MenuActivity extends AppCompatActivity {
                     super.run();
                 }
             }.start();
-            Log.i("**************","无网络状态");
+            Log.i("**************", "无网络状态");
             MyApplication.showToast("无网络连接，请稍后重试!");
         }
     }
@@ -219,15 +232,15 @@ public class MenuActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // 判断是否有网络连接
-                if(mNetworkAvalible){
-                    SpUtil.putBoolean(getApplicationContext(),"NETPAGE"+position,mNetworkAvalible );
+                if (mNetworkAvalible) {
+                    SpUtil.putBoolean(getApplicationContext(), "NETPAGE" + position, mNetworkAvalible);
                     getMenuList(mTypesList.get(position).getTypeid());
 
-                }else if(SpUtil.getBoolean(getApplicationContext(),"NETPAGE"+position,false)){
+                } else if (SpUtil.getBoolean(getApplicationContext(), "NETPAGE" + position, false)) {
                     Message msg = new Message();
                     msg.what = MENULIST;
                     mHandler.sendMessage(msg);
-                }else {
+                } else {
                     MyApplication.showToast("无网络连接，请稍后重试!");
                 }
 
@@ -272,12 +285,12 @@ public class MenuActivity extends AppCompatActivity {
                 holder = (ViewHolder) convertView.getTag();
             }
             String fileName = getItem(position).getTypename() + position;
-            if(mNetworkAvalible){
-                holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(),MenuActivity.this));
+            if (mNetworkAvalible) {
+                holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(), MenuActivity.this));
                 //将图片本地化
                 SaveDrawableUtil.putDrawable(getApplicationContext(),
-                        getItem(position).getTypepic(),fileName);
-            }else{
+                        getItem(position).getTypepic(), fileName);
+            } else {
                 //从本地获取图片
                 Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
                 holder.img.setImageBitmap(bitmap);
@@ -290,7 +303,7 @@ public class MenuActivity extends AppCompatActivity {
                 public boolean onLongClick(View v) {
                     String path = getItem(position).getTypepic();
                     String imgurl = MyApplication.Http + path;
-                    SaveDrawableUtil.longPressClick(imgurl,MenuActivity.this);
+                    SaveDrawableUtil.longPressClick(imgurl, MenuActivity.this);
                     return false;
                 }
             });

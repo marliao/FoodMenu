@@ -74,6 +74,11 @@ public class vep_MenuActivity extends Activity {
         if (result.equals("cellect")) {
             tv_title.setText("收藏");
             return;
+        }else if(result.equals("menu")){
+            int typeid = menuList.get(0).getTypeid();
+            List<Types> typesList = MyApplication.getSort().getTypesList();
+            String typename = typesList.get(typeid - 1).getTypename();
+            tv_title.setText(typename);
         }
         int typeid = menuList.get(0).getTypeid();
         List<Types> typesList = MyApplication.getSort().getTypesList();
