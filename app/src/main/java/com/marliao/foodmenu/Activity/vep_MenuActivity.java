@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
@@ -45,7 +46,6 @@ public class vep_MenuActivity extends Activity {
     private ListView green_name;
     private List<Menu> menuList;
     private int menuCount = 10;
-    private boolean mIsLoad = true;
         Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -54,7 +54,7 @@ public class vep_MenuActivity extends Activity {
     };
     private menuDao mMenuDao;
     private TextView tv_title;
-    private stepDao step;
+    private stepDao mStepDao;
     private List<Steps> stepList;
 
     @Override
@@ -63,6 +63,7 @@ public class vep_MenuActivity extends Activity {
         setContentView(R.layout.activity_vep_menu);
         green_name = (ListView) findViewById(R.id.greens_name);
         mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
+        mStepDao = stepDao.getInstanceStep(getApplicationContext());
         intiDate();
         InitTitle();
 
@@ -94,7 +95,10 @@ public class vep_MenuActivity extends Activity {
 
                                 int menuid = menuList.get(position).getMenuid();
                                 String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
-                                MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
+                                MenuDetail menuDetail = ResolveJson.resolveMenuDetail(json);
+                                //将数据存入到数据库中
+                                mStepDao.insertStepList(menuDetail.getStepsList());
+                                MyApplication.setMenuDetail(menuDetail);
                                 System.out.println("第一个条目可以在子线程中点击");
                                 handler.sendEmptyMessage(0);
                             } catch (JSONException e) {
@@ -104,17 +108,21 @@ public class vep_MenuActivity extends Activity {
                         }
                     }.start();
                 } else {
-                    //获取数据库的数据
-                    step = stepDao.getInstanceStep(getApplicationContext());
-                    stepList = step.findAll();
-                    //获取当前点击的menu数据
-                    Menu menu = MyApplication.getFoodMenu().getMenuList().get(position);
-                    //创建一个MenuDetail对象存入数据
-                    MenuDetail detail = new MenuDetail();
-                    detail.setMenu(menu);
-                    detail.setStepsList(stepList);
-                    MyApplication.setMenuDetail(detail);
-                    System.out.println("menu对象数据为:-----------------------" + menu);
+                   new Thread(){
+                       @Override
+                       public void run() {
+                           stepList = mStepDao.findAll();
+                           //获取当前点击的menu数据
+                           Menu menu = menuList.get(position);
+                           //创建一个MenuDetail对象存入数据
+                           MenuDetail detail = new MenuDetail();
+                           detail.setMenu(menu);
+                           detail.setStepsList(stepList);
+                           MyApplication.setMenuDetail(detail);
+                           handler.sendEmptyMessage(0);
+                           System.out.println("menu对象数据为:-----------------------" + menu);
+                       }
+                   }.start();
                 }
             }
         });

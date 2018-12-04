@@ -5,6 +5,15 @@ public class Comment {
     private String region;
     private String content;
     private Ptime ptime;
+    private int cid;
+
+    public int getCid() {
+        return cid;
+    }
+
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
 
     public String getContent() {
         return content;

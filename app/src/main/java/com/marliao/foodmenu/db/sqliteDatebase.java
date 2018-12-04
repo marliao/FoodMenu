@@ -34,8 +34,6 @@ public class sqliteDatebase extends SQLiteOpenHelper {
                 " description varchar(50)," +
                 " menuid integer," +
                 " pic varchar(30)," +
-                " islike Integer," +
-                " iscolleck Integer," +
                 " foreign key(menuid) references menu(menuid))");
 
         db.execSQL("create table comments(" +

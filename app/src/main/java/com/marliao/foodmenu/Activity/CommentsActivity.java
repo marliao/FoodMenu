@@ -1,10 +1,12 @@
 package com.marliao.foodmenu.Activity;
 
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,9 +24,8 @@ import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
-import com.marliao.foodmenu.db.doman.FoodMenu;
-import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Menu;
+import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Ptime;
 
 import org.json.JSONException;
@@ -33,6 +34,8 @@ import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity {
 
+    private static final int DATA = 100;
+    private static final int CONNENCTION_OK = 101;
     private Button btn_send;
     private TextView tv_food_comments;
     private ImageView iv_food_image;
@@ -41,11 +44,27 @@ public class CommentsActivity extends AppCompatActivity {
     private List<Comment> mCommentList;
     private Menu mMenu;
     private MyAdapter myAdapter;
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (myAdapter != null) {
-                myAdapter.notifyDataSetChanged();
+            switch (msg.what) {
+                case DATA:
+                    myAdapter = new MyAdapter(mCommentList);
+                    if (myAdapter != null) {
+                        lv_others_comments.setAdapter(myAdapter);
+                    }else {
+                        myAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case CONNENCTION_OK:
+                    String responseResult = (String) msg.obj;
+                    if (responseResult.equals("ok")) {
+                        MyApplication.showToast("评论成功");
+                        newData();
+                    } else {
+                        MyApplication.showToast("评论失败");
+                    }
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -61,13 +80,6 @@ public class CommentsActivity extends AppCompatActivity {
         initData();
         //发送评论
         sendComment();
-        //展示数据
-        initAdapter();
-    }
-
-    private void initAdapter() {
-        myAdapter = new MyAdapter(mCommentList);
-        lv_others_comments.setAdapter(myAdapter);
     }
 
     private void initData() {
@@ -75,50 +87,67 @@ public class CommentsActivity extends AppCompatActivity {
         mCommentList = comments.getCommentList();
         MenuDetail menuDetail = MyApplication.getMenuDetail();
         mMenu = menuDetail.getMenu();
-        tv_food_comments.setText(mMenu.getMenuname()+"的评论");
-        iv_food_image.setBackgroundDrawable(getdrawable.getdrawable(mMenu.getSpic(),CommentsActivity.this));
+        tv_food_comments.setText(mMenu.getMenuname() + "的评论");
+        iv_food_image.setBackgroundDrawable(getdrawable.getdrawable(mMenu.getSpic(), CommentsActivity.this));
+        Message msg = new Message();
+        msg.what=DATA;
+        mHandler.sendMessage(msg);
+
     }
 
     private void sendComment() {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    String yourComment = et_your_comment.getText().toString().trim();
-                    if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
-                        yourComment="";
-                        String generateComment = GenerateJson.generatePostComment(mMenu.getMenuid(),yourComment);
-                        String httpResult = HttpUtils.doPost(MyApplication.pathMenuPostComment, generateComment);
-                        String responseResult = ResolveJson.resolveResponseComment(httpResult);
-                        if (responseResult.equals("ok")) {
-                            MyApplication.showToast("评论成功");
-                            newData();
-                        }else {
-                            MyApplication.showToast("评论失败");
-                        }
-                    } else {
-                        MyApplication.showToast("评论框不能为空！");
+                String yourComment = et_your_comment.getText().toString().trim();
+                et_your_comment.setText("");
+                if (yourComment != null && !TextUtils.isEmpty(yourComment)) {
+                    if (myAdapter != null) {
+                        myAdapter.notifyDataSetChanged();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    getConnectionForResult(yourComment);
+                } else {
+                    MyApplication.showToast("评论框不能为空！");
                 }
             }
         });
+    }
+
+    private void getConnectionForResult(final String yourComment) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String generateComment = GenerateJson.generatePostComment(mMenu.getMenuid(), yourComment);
+                    String httpResult = HttpUtils.doPost(MyApplication.pathMenuPostComment, generateComment);
+                    String responseResult = ResolveJson.resolveResponseComment(httpResult);
+                    Message msg = new Message();
+                    msg.what = CONNENCTION_OK;
+                    msg.obj = responseResult;
+                    mHandler.sendMessage(msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
     }
 
     /**
      * 评论成功后更新评论列表
      */
     private void newData() {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
                     String commentResult = GenerateJson.generateComment(mMenu.getMenuid());
                     String jsonResult = HttpUtils.doPost(MyApplication.pathMenuComments, commentResult);
                     Comments comments = ResolveJson.resolveComments(jsonResult);
-                    MyApplication.setComments(comments);
-                    mHandler.sendEmptyMessage(0);
+                     mCommentList=comments.getCommentList();
+                    Message msg = new Message();
+                    msg.what = DATA;
+                    mHandler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -138,8 +167,9 @@ public class CommentsActivity extends AppCompatActivity {
     private class MyAdapter extends BaseAdapter {
 
         private List<Comment> commentList;
+
         public MyAdapter(List<Comment> mCommentList) {
-            this.commentList=mCommentList;
+            this.commentList = mCommentList;
         }
 
         @Override
@@ -171,19 +201,18 @@ public class CommentsActivity extends AppCompatActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.iv_comments_view.setBackgroundResource(R.mipmap.ic_launcher);
-            holder.tv_username.setText("未知的用户");
+            holder.tv_username.setText(getItem(position).getRegion());
             Ptime ptime = getItem(position).getPtime();
             holder.tv_date.setText(ptime.getYear() + "年" + ptime.getMonth() + "月" + ptime.getDate() + "日");
             int hours = Integer.parseInt(ptime.getHours());
             String str = null;
             if (hours > 12) {
-                str = "AM";
-            } else {
                 str = "PM";
+            } else {
+                str = "AM";
             }
             holder.tv_time.setText(ptime.getHours() + ":" + ptime.getMinutes() + str);
-            holder.tv_comments_content.setText("目前没有数据");
+            holder.tv_comments_content.setText(getItem(position).getContent());
             return convertView;
         }
     }
