@@ -78,7 +78,7 @@ public class CommentsActivity extends AppCompatActivity {
         initUI();
         //初始化数据
         initData();
-        //发送评论
+        //发送 评论
         sendComment();
     }
 
