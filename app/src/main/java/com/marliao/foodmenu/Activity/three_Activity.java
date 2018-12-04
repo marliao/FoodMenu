@@ -118,7 +118,7 @@ public class three_Activity extends Activity {
         ll_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //准备评论页面的数据
+                //准备评 论页面的数据
                 initCommentsData();
                 //跳转到评论页面
                 startActivity(new Intent(three_Activity.this, CommentsActivity.class));

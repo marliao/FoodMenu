@@ -24,6 +24,7 @@ public class MoreFunctionActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+
         tv_user_help = (TextView) findViewById(R.id.tv_user_help);
         tv_user_help.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +32,7 @@ public class MoreFunctionActivity extends AppCompatActivity {
                 startActivity(new Intent(MoreFunctionActivity.this,UserHelpActivity.class));
             }
         });
+
         tv_create_man = (TextView) findViewById(R.id.tv_create_man);
         tv_create_man.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +40,7 @@ public class MoreFunctionActivity extends AppCompatActivity {
                 startActivity(new Intent(MoreFunctionActivity.this,CreateManActivity.class));
             }
         });
+
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         final String phone = tv_phone.getText().toString().trim();
         tv_phone.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +54,15 @@ public class MoreFunctionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        TextView tv_photo = (TextView) findViewById(R.id.tv_photo);
+        tv_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+            }
+        });
+
         tv_more_back = (TextView) findViewById(R.id.tv_more_back);
         tv_more_back.setOnClickListener(new View.OnClickListener() {
             @Override

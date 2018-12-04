@@ -54,6 +54,15 @@
             android:textSize="40sp" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:padding="20dp"
+        android:text="相册"
+        android:textSize="40sp" />
+
 
 
     <TextView
