@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
@@ -38,6 +39,9 @@ import com.marliao.foodmenu.db.doman.Types;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -267,15 +271,20 @@ public class MenuActivity extends AppCompatActivity {
             }
             holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(),MenuActivity.this));
             holder.Itext.setText(getItem(position).getTypename());
+
+
             //设置长按点击事件
-            final ViewHolder finalHolder = holder;
             holder.img.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    SaveDrawableUtil.longPressClick(finalHolder.img,MenuActivity.this,position);
+                    String path = getItem(position).getTypepic();
+                    String imgurl = MyApplication.Http + path;
+                    SaveDrawableUtil.longPressClick(imgurl,MenuActivity.this);
                     return true;
                 }
             });
+
+
             return convertView;
         }
     }

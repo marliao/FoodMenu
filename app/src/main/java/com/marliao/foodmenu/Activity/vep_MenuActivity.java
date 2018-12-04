@@ -24,6 +24,7 @@ import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.Utils.SaveDrawableUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.menuDao;
 import com.marliao.foodmenu.db.dao.stepDao;
@@ -174,7 +175,7 @@ public class vep_MenuActivity extends Activity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (position > 16) {
                 System.out.println("position" + position);
             }
@@ -193,6 +194,15 @@ public class vep_MenuActivity extends Activity {
             String spic = item.getSpic();
             System.out.println(spic);
             holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic, vep_MenuActivity.this));
+            holder.img1.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    String spic1 = getItem(position).getSpic();
+                    String imgurl = MyApplication.Http + spic1;
+                    SaveDrawableUtil.longPressClick(imgurl,vep_MenuActivity.this);
+                    return true;
+                }
+            });
             return convertView;
         }
 
