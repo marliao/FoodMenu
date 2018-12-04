@@ -291,7 +291,7 @@ public class MenuActivity extends AppCompatActivity {
                     String path = getItem(position).getTypepic();
                     String imgurl = MyApplication.Http + path;
                     SaveDrawableUtil.longPressClick(imgurl,MenuActivity.this);
-                    return true;
+                    return false;
                 }
             });
             return convertView;
