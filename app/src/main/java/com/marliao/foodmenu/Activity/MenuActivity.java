@@ -150,7 +150,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //判断是否有网络连接
+                // 判断是否有网络连接
                 if(mNetworkAvalible){
                     SpUtil.putBoolean(getApplicationContext(),"NETPAGE"+position,mNetworkAvalible );
                     getMenuList(mTypesList.get(position).getTypeid());
