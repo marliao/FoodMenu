@@ -1,8 +1,6 @@
 package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,31 +12,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
-import com.marliao.foodmenu.Utils.DownPhotoUtil;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SaveDrawableUtil;
-import com.marliao.foodmenu.Utils.SpUtil;
+import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.commentsDao;
-import com.marliao.foodmenu.db.dao.stepDao;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
-import com.marliao.foodmenu.db.doman.Echo;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Steps;
-import com.marliao.foodmenu.Utils.getdrawable;
 
 import org.json.JSONException;
 
-import java.net.HttpURLConnection;
 import java.util.List;
 
 public class three_Activity extends Activity {
@@ -326,7 +318,7 @@ public class three_Activity extends Activity {
                 @Override
                 public boolean onLongClick(View v) {
                     String url = MyApplication.Http + getItem(position).getPic();
-                    SaveDrawableUtil.longPressClick(url,three_Activity.this);
+                    SaveDrawableUtil.longPressClick(url, three_Activity.this);
                     return true;
                 }
             });

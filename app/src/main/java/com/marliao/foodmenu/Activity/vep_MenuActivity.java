@@ -2,21 +2,17 @@ package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
@@ -47,7 +43,7 @@ public class vep_MenuActivity extends Activity {
     private ListView green_name;
     private List<Menu> menuList;
     private int menuCount = 10;
-        Handler handler = new Handler() {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             startActivity(new Intent(getApplicationContext(), three_Activity.class));
@@ -69,11 +65,12 @@ public class vep_MenuActivity extends Activity {
         InitTitle();
 
     }
+
     // 通过id给标题进行设置
     private void InitTitle() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         String result = MyApplication.getFoodMenu().getResult();
-        if(result.equals("cellect")){
+        if (result.equals("cellect")) {
             tv_title.setText("收藏");
             return;
         }
@@ -113,21 +110,21 @@ public class vep_MenuActivity extends Activity {
                         }
                     }.start();
                 } else {
-                   new Thread(){
-                       @Override
-                       public void run() {
-                           //获取当前点击的menu数据
-                           Menu menu = menuList.get(position);
-                           stepList = mStepDao.findAll(menu.getMenuid());
-                           //创建一个MenuDetail对象存入数据
-                           MenuDetail detail = new MenuDetail();
-                           detail.setMenu(menu);
-                           detail.setStepsList(stepList);
-                           MyApplication.setMenuDetail(detail);
-                           handler.sendEmptyMessage(0);
-                           System.out.println("menu对象数据为:-----------------------" + menu);
-                       }
-                   }.start();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            //获取当前点击的menu数据
+                            Menu menu = menuList.get(position);
+                            stepList = mStepDao.findAll(menu.getMenuid());
+                            //创建一个MenuDetail对象存入数据
+                            MenuDetail detail = new MenuDetail();
+                            detail.setMenu(menu);
+                            detail.setStepsList(stepList);
+                            MyApplication.setMenuDetail(detail);
+                            handler.sendEmptyMessage(0);
+                            System.out.println("menu对象数据为:-----------------------" + menu);
+                        }
+                    }.start();
                 }
             }
         });
@@ -199,7 +196,7 @@ public class vep_MenuActivity extends Activity {
                 public boolean onLongClick(View v) {
                     String spic1 = getItem(position).getSpic();
                     String imgurl = MyApplication.Http + spic1;
-                    SaveDrawableUtil.longPressClick(imgurl,vep_MenuActivity.this);
+                    SaveDrawableUtil.longPressClick(imgurl, vep_MenuActivity.this);
                     return true;
                 }
             });

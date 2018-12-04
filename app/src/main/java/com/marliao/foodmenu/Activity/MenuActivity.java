@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
@@ -30,7 +28,7 @@ import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.categoryTypeDao;
-import com.marliao.foodmenu.db.dao.stepDao;
+import com.marliao.foodmenu.db.dao.menuDao;
 import com.marliao.foodmenu.db.doman.Echo;
 import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
@@ -39,15 +37,8 @@ import com.marliao.foodmenu.db.doman.Types;
 
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.marliao.foodmenu.db.dao.menuDao;
-
-import static com.marliao.foodmenu.R.id.bt_function;
 
 public class MenuActivity extends AppCompatActivity {
 
