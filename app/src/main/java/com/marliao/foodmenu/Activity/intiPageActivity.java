@@ -55,6 +55,7 @@ public class intiPageActivity extends Activity {
         //菜单主页面
 
         networkAvalible = IsInternet.isNetworkAvalible(intiPageActivity.this);
+        //判断是否有网络连接
         if(networkAvalible){
             SpUtil.putBoolean(getApplicationContext(),"NETPAGEONE",networkAvalible);
            handler.sendEmptyMessageDelayed(ENTTER_HOME,4000);

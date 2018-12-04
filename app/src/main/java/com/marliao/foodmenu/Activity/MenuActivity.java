@@ -151,6 +151,7 @@ public class MenuActivity extends AppCompatActivity {
         menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //判断是否有网络连接
                 if(mNetworkAvalible){
                     SpUtil.putBoolean(getApplicationContext(),"NETPAGETWO",mNetworkAvalible );
                     getMenuList(mTypesList.get(position).getTypeid());
