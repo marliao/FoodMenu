@@ -26,6 +26,7 @@ public class categoryTypeDao {
     public int insertType(Types type){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put("typeid",type.getTypeid());
         values.put("typename",type.getTypename());
         values.put("typepic",type.getTypepic());
         values.put("description",type.getTypeid());
@@ -42,6 +43,7 @@ public class categoryTypeDao {
         SQLiteDatabase db = sdb.getWritableDatabase();
         for(Types type : list){
             ContentValues values = new ContentValues();
+            values.put("typeid",type.getTypeid());
             values.put("typename",type.getTypename());
             values.put("typepic",type.getTypepic());
             values.put("description",type.getTypeid());

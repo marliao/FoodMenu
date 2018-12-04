@@ -26,6 +26,7 @@ public class menuDao {
     public  int insertMenu(Menu menu){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put("menuid",menu.getMenuid());
         values.put("menuname",menu.getMenuname());
         values.put("spic",menu.getSpic());
         values.put("assistmaterial",menu.getAssistmaterial());
@@ -49,6 +50,7 @@ public class menuDao {
         SQLiteDatabase db = sdb.getWritableDatabase();
         for(Menu menu : list){
             ContentValues values = new ContentValues();
+            values.put("menuid",menu.getMenuid());
             values.put("menuname",menu.getMenuname());
             values.put("spic",menu.getSpic());
             values.put("assistmaterial",menu.getAssistmaterial());

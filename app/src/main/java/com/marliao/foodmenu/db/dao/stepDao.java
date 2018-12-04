@@ -33,6 +33,7 @@ public class stepDao {
     public int insertStep(Steps step){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put("stepid",step.getStepid());
         values.put("description",step.getDescription());
         values.put("menuid",step.getMenuid());
         values.put("pic",step.getPic());
@@ -49,6 +50,7 @@ public class stepDao {
         SQLiteDatabase db = sdb.getWritableDatabase();
         for(Steps step: list){
             ContentValues values = new ContentValues();
+            values.put("stepid",step.getStepid());
             values.put("description",step.getDescription());
             values.put("menuid",step.getMenuid());
             values.put("pic",step.getPic());
