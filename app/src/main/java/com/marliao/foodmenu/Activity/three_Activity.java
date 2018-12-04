@@ -1,6 +1,8 @@
 package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
+import com.marliao.foodmenu.Utils.DownPhotoUtil;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
@@ -244,6 +247,31 @@ public class three_Activity extends Activity {
         tv_title = (TextView) findViewById(R.id.tv_title);
         dish_Img = (ImageView) findViewById(R.id.dish_Img);
         dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(),three_Activity.this));
+        //TODO 待测试  给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
+        dish_Img.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(three_Activity.this);
+                builder.setTitle("图片保存");
+                builder.setMessage("是否保存图片？");
+                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //保存图片操作
+                        String url=MyApplication.Http+menu.getSpic();
+                        DownPhotoUtil.donwloadImg(three_Activity.this,url);
+                    }
+                });
+                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //
+                    }
+                });
+                builder.show();
+                return true;
+            }
+        });
         dish_name = (TextView) findViewById(R.id.dish_name);
         dish_name.setText(menu.getMenuname());
         dish_brief = (TextView) findViewById(R.id.dish_brief);
@@ -290,7 +318,7 @@ public class three_Activity extends Activity {
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
                 convertView = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
@@ -305,6 +333,31 @@ public class three_Activity extends Activity {
             holder.stepTittle.setText("步骤："+getItem(position).getStepid());
             holder.stepTittle2.setText(getItem(position).getDescription());
             holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(), three_Activity.this));
+            //TODO 待测试  给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
+            holder.step_Img.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(three_Activity.this);
+                    builder.setTitle("图片保存");
+                    builder.setMessage("是否保存图片？");
+                    builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //保存图片操作
+                            String url=MyApplication.Http+getItem(position).getPic();
+                            DownPhotoUtil.donwloadImg(three_Activity.this,url);
+                        }
+                    });
+                    builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //
+                        }
+                    });
+                    builder.show();
+                    return true;
+                }
+            });
             holder.dish_time.setText("10min");
             return convertView;
         }
