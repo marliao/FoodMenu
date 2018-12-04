@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:padding="10dp"
-        android:text="使用帮助"
+        android:text="开发人员信息"
         android:textSize="50sp"
         android:layout_gravity="center"/>
     <TextView
@@ -21,15 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:padding="10dp"
-        android:text="                 使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使
-        用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助
-        使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮
-        助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用
-        帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使用帮助使
-        用帮助使用帮助使用帮助使用帮助使用帮助使用帮助"
+        android:text="        纪恩赐，李壮，吴凯（次排名不分先后，按首字母排序）"
         android:textSize="30sp"/>
     <TextView
-        android:id="@+id/tv_help_back"
+        android:id="@+id/tv_create_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

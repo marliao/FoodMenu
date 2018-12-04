@@ -8,17 +8,19 @@ import android.widget.TextView;
 
 import com.marliao.foodmenu.R;
 
-public class UserHelpActivity extends AppCompatActivity {
+import java.util.AbstractMap;
+
+public class CreateManActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_help);
-        TextView tv_help_back=findViewById(R.id.tv_help_back);
-        tv_help_back.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_create_man);
+        TextView tv_create_back=findViewById(R.id.tv_create_back);
+        tv_create_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserHelpActivity.this,MoreFunctionActivity.class));
+                startActivity(new Intent(CreateManActivity.this,MoreFunctionActivity.class));
                 finish();
             }
         });

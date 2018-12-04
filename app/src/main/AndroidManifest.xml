@@ -28,7 +28,8 @@
         <activity android:name=".Activity.CommentsActivity" />
         <activity android:name=".Activity.notnet_Activity" />
         <activity android:name=".Activity.MoreFunctionActivity" />
-        <activity android:name=".Activity.UserHelpActivity"></activity>
+        <activity android:name=".Activity.UserHelpActivity" />
+        <activity android:name=".Activity.CreateManActivity"></activity>
     </application>
 
 </manifest>
