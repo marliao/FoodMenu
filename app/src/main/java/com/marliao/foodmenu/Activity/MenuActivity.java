@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,6 +24,7 @@ import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.Utils.SaveDrawableUtil;
 import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.EchoDao;
@@ -253,7 +255,7 @@ public class MenuActivity extends AppCompatActivity {
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
                 convertView = View.inflate(MenuActivity.this, R.layout.menu_vep, null);
@@ -265,6 +267,15 @@ public class MenuActivity extends AppCompatActivity {
             }
             holder.img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getTypepic(),MenuActivity.this));
             holder.Itext.setText(getItem(position).getTypename());
+            //设置长按点击事件
+            final ViewHolder finalHolder = holder;
+            holder.img.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    SaveDrawableUtil.longPressClick(finalHolder.img,MenuActivity.this,position);
+                    return true;
+                }
+            });
             return convertView;
         }
     }
