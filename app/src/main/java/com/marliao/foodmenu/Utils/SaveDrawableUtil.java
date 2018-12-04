@@ -59,7 +59,7 @@ public class SaveDrawableUtil {
                     FileOutputStream outStream = new FileOutputStream(file);
                     byte[] bytes = new byte[1024];
                     int tmp = -1;
-                    while((tmp = stream.read(bytes))>= -1){
+                    while((tmp = stream.read(bytes)) != -1){
                         outStream.write(bytes,0,tmp);
                     }
                     stream.close();

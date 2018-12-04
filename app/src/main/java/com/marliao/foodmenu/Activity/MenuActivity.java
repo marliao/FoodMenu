@@ -294,8 +294,6 @@ public class MenuActivity extends AppCompatActivity {
                     return true;
                 }
             });
-
-
             return convertView;
         }
     }
