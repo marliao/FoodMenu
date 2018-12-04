@@ -102,7 +102,6 @@ public class categoryTypeDao {
         sdb.close();
         return type;
     }
-
     /**
      * 清空所有数据
      * @return 一共清理了多少行

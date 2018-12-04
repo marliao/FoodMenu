@@ -93,7 +93,6 @@ public class stepDao {
         return list;
     }
 
-
     public Steps findByID(Integer id){
         Steps steps = null;
         SQLiteDatabase db = sdb.getWritableDatabase();

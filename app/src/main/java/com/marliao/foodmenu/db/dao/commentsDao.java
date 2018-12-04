@@ -44,7 +44,6 @@ public class commentsDao {
         sdb.close();
         return (int) flag;
     };
-
     /**
      * 添加一个list集合进入到数据库
      * @param list

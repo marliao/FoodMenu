@@ -2,6 +2,7 @@ package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -190,8 +191,17 @@ public class vep_MenuActivity extends Activity {
             Menu item = getItem(position);
             holder.menu_name.setText(item.getMenuname());
             String spic = item.getSpic();
-            System.out.println(spic);
-            holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic, vep_MenuActivity.this));
+            String fileName = item.getMenuname()+position;
+            if(IsInternet.isNetworkAvalible(getApplicationContext())){
+                holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic, vep_MenuActivity.this));
+                //将图片本地化
+                SaveDrawableUtil.putDrawable(getApplicationContext(),
+                        spic,fileName);
+            }else{
+                //从本地获取图片
+                Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
+                holder.img1.setImageBitmap(bitmap);
+            }
             holder.img1.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
