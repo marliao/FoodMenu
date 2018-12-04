@@ -59,7 +59,7 @@ public class three_Activity extends Activity {
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            //跳转到评论页面
+            //跳转评论页面
             startActivity(new Intent(three_Activity.this, CommentsActivity.class));
             super.handleMessage(msg);
         }
