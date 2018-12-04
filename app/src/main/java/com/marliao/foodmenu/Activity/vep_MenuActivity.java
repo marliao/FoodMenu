@@ -91,6 +91,7 @@ public class vep_MenuActivity extends Activity {
                         @Override
                         public void run() {
                             try {
+
                                 int menuid = menuList.get(position).getMenuid();
                                 String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
                                 MyApplication.setMenuDetail(ResolveJson.resolveMenuDetail(json));
