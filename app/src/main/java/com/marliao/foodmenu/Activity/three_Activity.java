@@ -2,6 +2,7 @@ package com.marliao.foodmenu.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -324,7 +325,19 @@ public class three_Activity extends Activity {
             }
             holder.stepTittle.setText("步骤：" + getItem(position).getStepid());
             holder.stepTittle2.setText(getItem(position).getDescription());
-            holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(), three_Activity.this));
+            String fileName = "stepData"+position;
+            String spic = getItem(position).getPic();
+            if(IsInternet.isNetworkAvalible(getApplicationContext())){
+                holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(spic, three_Activity.this));
+                //将图片本地化
+                SaveDrawableUtil.putDrawable(getApplicationContext(),
+                        spic,fileName);
+            }else{
+                //从本地获取图片
+                Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
+                holder.step_Img.setImageBitmap(bitmap);
+            }
+//            holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(), three_Activity.this));
             //给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
             holder.step_Img.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
