@@ -1,5 +1,6 @@
 package com.marliao.foodmenu.Activity;
 
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +49,10 @@ public class CommentsActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case DATA:
+                    myAdapter = new MyAdapter(mCommentList);
                     if (myAdapter != null) {
+                        lv_others_comments.setAdapter(myAdapter);
+                    }else {
                         myAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -74,15 +78,8 @@ public class CommentsActivity extends AppCompatActivity {
         initUI();
         //初始化数据
         initData();
-        //展示数据
-        initAdapter();
         //发送评论
         sendComment();
-    }
-
-    private void initAdapter() {
-        myAdapter = new MyAdapter(mCommentList);
-        lv_others_comments.setAdapter(myAdapter);
     }
 
     private void initData() {
@@ -92,6 +89,10 @@ public class CommentsActivity extends AppCompatActivity {
         mMenu = menuDetail.getMenu();
         tv_food_comments.setText(mMenu.getMenuname() + "的评论");
         iv_food_image.setBackgroundDrawable(getdrawable.getdrawable(mMenu.getSpic(), CommentsActivity.this));
+        Message msg = new Message();
+        msg.what=DATA;
+        mHandler.sendMessage(msg);
+
     }
 
     private void sendComment() {
@@ -143,7 +144,7 @@ public class CommentsActivity extends AppCompatActivity {
                     String commentResult = GenerateJson.generateComment(mMenu.getMenuid());
                     String jsonResult = HttpUtils.doPost(MyApplication.pathMenuComments, commentResult);
                     Comments comments = ResolveJson.resolveComments(jsonResult);
-                    MyApplication.setComments(comments);
+                     mCommentList=comments.getCommentList();
                     Message msg = new Message();
                     msg.what = DATA;
                     mHandler.sendMessage(msg);
