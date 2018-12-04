@@ -1,5 +1,7 @@
 package com.marliao.foodmenu.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
+import com.marliao.foodmenu.Utils.DownPhotoUtil;
 import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.ResolveJson;
@@ -89,6 +92,31 @@ public class CommentsActivity extends AppCompatActivity {
         mMenu = menuDetail.getMenu();
         tv_food_comments.setText(mMenu.getMenuname() + "的评论");
         iv_food_image.setBackgroundDrawable(getdrawable.getdrawable(mMenu.getSpic(), CommentsActivity.this));
+        //TODO 待测试  给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
+        iv_food_image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(CommentsActivity.this);
+                builder.setTitle("图片保存");
+                builder.setMessage("是否保存图片？");
+                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //保存图片操作
+                        String url=MyApplication.Http+mMenu.getSpic();
+                        DownPhotoUtil.donwloadImg(CommentsActivity.this,url);
+                    }
+                });
+                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //
+                    }
+                });
+                builder.show();
+                return true;
+            }
+        });
         Message msg = new Message();
         msg.what=DATA;
         mHandler.sendMessage(msg);
