@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,14 @@ public class three_Activity extends Activity {
     private commentsDao mCommentsDao;
     private EchoDao echoDao;
     private int mMenuid;
+    private Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            //跳转到评论页面
+            startActivity(new Intent(three_Activity.this, CommentsActivity.class));
+            super.handleMessage(msg);
+        }
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -117,8 +127,6 @@ public class three_Activity extends Activity {
             public void onClick(View v) {
                 //准备评 论页面的数据
                 initCommentsData();
-                //跳转到评论页面
-                startActivity(new Intent(three_Activity.this, CommentsActivity.class));
             }
         });
         //喜欢和不喜欢按钮的点击事件
@@ -212,6 +220,7 @@ public class three_Activity extends Activity {
                         int deleteAll = mCommentsDao.deleteCommentsAll();
                         System.out.println("删除了"+deleteAll+"行");
                         mCommentsDao.insertCommentList(commentList);
+                        mHandler.sendEmptyMessage(0);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -227,6 +236,7 @@ public class three_Activity extends Activity {
                     Comments comments = new Comments();
                     comments.setCommentList(commentsList);
                     MyApplication.setComments(comments);
+                    mHandler.sendEmptyMessage(0);
                 }
             }.start();
         }
