@@ -6,19 +6,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class sqliteDatebase extends SQLiteOpenHelper {
     public sqliteDatebase(Context context) {
-        super(context, "types.db", null, 1);
+        super(context, "types.db", null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table type(" +
-                "typeid integer primary key autoincrement," +
+                "typeid integer," +
                 "typename varchar(20)," +
                 "typepic varchar(20)," +
                 "description varchar(40))");
 
         db.execSQL("create table menu(" +
-                " menuid Integer primary key autoincrement," +
+                " menuid Integer," +
                 " menuname varchar(30)," +
                 " spic varchar(30)," +
                 " assistmaterial varchar(30)," +
@@ -30,7 +30,7 @@ public class sqliteDatebase extends SQLiteOpenHelper {
                 " foreign key(typeid) references type(typeid))");
 
         db.execSQL("create table step(" +
-                " stepid Integer primary key autoincrement," +
+                " stepid Integer," +
                 " description varchar(50)," +
                 " menuid integer," +
                 " pic varchar(30)," +

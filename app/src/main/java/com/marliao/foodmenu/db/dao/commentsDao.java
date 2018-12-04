@@ -144,5 +144,11 @@ public class commentsDao {
         sdb.close();
         return comment;
     }
+    public int deleteCommentsAll(){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        long flag = db.delete("comments",null,null);
+        sdb.close();
+        return (int) flag;
+    };
 
 }

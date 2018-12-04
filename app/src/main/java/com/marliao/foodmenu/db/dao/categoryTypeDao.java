@@ -55,6 +55,8 @@ public class categoryTypeDao {
         sdb.close();
         return (int) flag;
     };
+
+
     public int updateType(Types type){
         SQLiteDatabase db = sdb.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -99,5 +101,14 @@ public class categoryTypeDao {
         return type;
     }
 
-
+    /**
+     * 清空所有数据
+     * @return 一共清理了多少行
+     */
+    public int deleteTypeAll(){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        long flag = db.delete("type",null,null);
+        sdb.close();
+        return (int) flag;
+    };
 }

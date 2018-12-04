@@ -107,4 +107,15 @@ public class stepDao {
         sdb.close();
         return steps;
     }
+
+    /**
+     * 清理所有的数据
+     * @return 返回的行数
+     */
+    public int deleteStepAll(){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        long flag = db.delete("step",null,null);
+        sdb.close();
+        return (int) flag;
+    };
 }

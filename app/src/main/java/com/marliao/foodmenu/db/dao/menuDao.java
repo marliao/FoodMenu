@@ -154,5 +154,14 @@ public class menuDao {
         return menu;
     }
 
-
+    /**
+     * 清理全部数据
+     * @return 清理的行数
+     */
+    public int deleteMenuAll(){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        long flag = db.delete("menu",null,null);
+        sdb.close();
+        return (int) flag;
+    };
 }
