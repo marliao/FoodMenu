@@ -130,6 +130,7 @@ public class MenuActivity extends AppCompatActivity {
     private void initdb() {
         //将首页菜系数据存入数据库
         categoryTypeDao categoryTypeDao = new categoryTypeDao(this);
+        categoryTypeDao.deleteTypeAll();
         categoryTypeDao.insertTypeList(mTypesList);
     }
 
@@ -148,6 +149,7 @@ public class MenuActivity extends AppCompatActivity {
                     FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
                     //将菜谱列表页数据保存到数据库
                     menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
+                    instanceMenu.deleteMenuAll();
                     instanceMenu.insertMenuList(foodMenu.getMenuList());
                     MyApplication.setFoodMenu(foodMenu);
 
