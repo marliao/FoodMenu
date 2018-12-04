@@ -1,6 +1,8 @@
 package com.marliao.foodmenu.Activity;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ public class MoreFunctionActivity extends AppCompatActivity {
     private TextView tv_create_man;
     private TextView tv_phone;
     private TextView tv_more_back;
+    private TextView tv_app_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,14 @@ public class MoreFunctionActivity extends AppCompatActivity {
             }
         });
 
+        tv_app_info = (TextView) findViewById(R.id.tv_app_info);
+        tv_app_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MoreFunctionActivity.this,AppInfoActivity.class));
+            }
+        });
+
         tv_phone = (TextView) findViewById(R.id.tv_phone);
         final String phone = tv_phone.getText().toString().trim();
         tv_phone.setOnClickListener(new View.OnClickListener() {
@@ -52,14 +63,6 @@ public class MoreFunctionActivity extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + phone));
                 startActivity(intent);
-            }
-        });
-
-        TextView tv_photo = (TextView) findViewById(R.id.tv_photo);
-        tv_photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //
             }
         });
 

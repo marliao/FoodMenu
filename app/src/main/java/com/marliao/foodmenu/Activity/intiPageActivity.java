@@ -41,7 +41,6 @@ public class intiPageActivity extends Activity {
             }
         }
     };
-    private TextView tv_version_name;
 
     private void intiNptNet() {
         Intent intent = new Intent(this, notnet_Activity.class);
@@ -54,8 +53,6 @@ public class intiPageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intipage);
         page = (RelativeLayout) findViewById(R.id.page);
-        tv_version_name = (TextView) findViewById(R.id.tv_version_name);
-        initData();
         //初始化动画
         intiCartoon();
         //菜单主页面
@@ -72,21 +69,7 @@ public class intiPageActivity extends Activity {
         }
     }
 
-    private void initData() {
-        tv_version_name.setText("版本名称:" + getVersionName());
-    }
 
-    /**
-     * 获取版本名称：在清单文件中
-     *
-     * @return 应用版本名称
-     */
-    private String getVersionName() {
-        PackageManager packageManager = getPackageManager();
-        PackageInfo packageArchiveInfo = packageManager.getPackageArchiveInfo(getPackageCodePath(), 0);
-        String versionName = packageArchiveInfo.versionName;
-        return versionName;
-    }
 
     private void intiMain() {
         Intent intent = new Intent(this, MenuActivity.class);
