@@ -203,7 +203,7 @@ public class three_Activity extends Activity {
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
                         Comments comments = ResolveJson.resolveComments(httpResult);
                         MyApplication.setComments(comments);
-                        //获取数据将数据存入到数据库中
+                        //获取数据将数据存入到数 据库中
                         List<Comment> commentList = comments.getCommentList();
                         mCommentsDao.insertCommentList(commentList);
                         mHandler.sendEmptyMessage(0);
