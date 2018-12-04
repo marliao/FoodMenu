@@ -14,7 +14,7 @@
         android:id="@+id/img_one"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/beauty" />
+        android:background="@drawable/banner" />
 
     <GridView
         android:id="@+id/menu_one"

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.marliao.foodmenu.R;
 
 import com.marliao.foodmenu.Utils.IsInternet;
+import com.marliao.foodmenu.Utils.SpUtil;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -37,9 +38,11 @@ public class intiPageActivity extends Activity {
             }
         }
     };
+
     private void intiNptNet() {
         Intent intent=new Intent(this,notnet_Activity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -52,20 +55,21 @@ public class intiPageActivity extends Activity {
         //菜单主页面
 
         networkAvalible = IsInternet.isNetworkAvalible(intiPageActivity.this);
-       if(networkAvalible){
+        //判断是否有网络连接
+        if(networkAvalible){
+            SpUtil.putBoolean(getApplicationContext(),"NETPAGEONE",networkAvalible);
            handler.sendEmptyMessageDelayed(ENTTER_HOME,4000);
+       }else if(SpUtil.getBoolean(getApplicationContext(),"NETPAGEONE",false)){
+            handler.sendEmptyMessageDelayed(ENTTER_HOME,4000);
        }else {
-           handler.sendEmptyMessageDelayed(ENTTER_NOT,4000);
-
-       }
-
-
-
+            handler.sendEmptyMessageDelayed(ENTTER_NOT,4000);
+        }
     }
 
     private void intiMain() {
         Intent intent=new Intent(this,MenuActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void intiCartoon() {
