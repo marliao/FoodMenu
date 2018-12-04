@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,8 +13,30 @@
         android:layout_gravity="center"
         android:text="更多功能"
         android:textSize="50sp" />
+
     <TextView
+        android:id="@+id/tv_user_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="使用帮助"/>
+        android:padding="20dp"
+        android:text="使用帮助"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/tv_create_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="开发人员信息"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="联系方式"
+        android:textSize="40sp" />
+
+
 </LinearLayout>
