@@ -23,6 +23,7 @@ import com.marliao.foodmenu.Utils.GenerateJson;
 import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
+import com.marliao.foodmenu.Utils.SaveDrawableUtil;
 import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.commentsDao;
@@ -34,6 +35,7 @@ import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Steps;
 import com.marliao.foodmenu.Utils.getdrawable;
+
 import org.json.JSONException;
 
 import java.net.HttpURLConnection;
@@ -97,20 +99,20 @@ public class three_Activity extends Activity {
 
     private void initCollect() {
         //从sp中获取value值用作回显
-        if(echoDao.findMenuidColleck(mMenuid) == 1){
+        if (echoDao.findMenuidColleck(mMenuid) == 1) {
             iv_collect.setBackgroundResource(R.drawable.collect);
-        }else{
+        } else {
             iv_collect.setBackgroundResource(R.drawable.discollect);
         }
         iv_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(echoDao.findMenuidColleck(mMenuid) == 0){
+                if (echoDao.findMenuidColleck(mMenuid) == 0) {
                     iv_collect.setBackgroundResource(R.drawable.collect);
-                    echoDao.updateMenuidColleck(mMenuid,1);
-                }else{
+                    echoDao.updateMenuidColleck(mMenuid, 1);
+                } else {
                     iv_collect.setBackgroundResource(R.drawable.discollect);
-                    echoDao.updateMenuidColleck(mMenuid,0);
+                    echoDao.updateMenuidColleck(mMenuid, 0);
                 }
             }
         });
@@ -128,51 +130,51 @@ public class three_Activity extends Activity {
             }
         });
         //喜欢和不喜欢按钮的点击事件
-            ll_like.setOnClickListener(new View.OnClickListener() {
+        ll_like.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    //当前页面的数据
-                    if (echoDao.findMenuidLike(mMenuid)==1) {
-                        iv_like.setBackgroundResource(R.drawable.dislike);
-                        menu.setLikes(menu.getLikes()-1);
-                        echoDao.updateMenuidLike(mMenuid,0);
-                        MyApplication.showToast("喜欢人数:"+menu.getLikes());
-                    }else {
-                        iv_like.setBackgroundResource(R.drawable.like);
-                        //判断不喜欢的状态，为true变成false
-                        if(echoDao.findMenuidNotLike(mMenuid) == 1){
-                            iv_dislike.setBackgroundResource(R.drawable.dislike);
-                            echoDao.updateMenuidNotLike(mMenuid,0);
-                            menu.setNotlikes(menu.getNotlikes()-1);
-                        }
-                        menu.setLikes(menu.getLikes()+1);
-                        echoDao.updateMenuidLike(mMenuid,1);
-                        MyApplication.showToast("喜欢人数:"+menu.getLikes());
-                    }
-                }
-            });
-            ll_dislike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
+                //当前页面的数据
+                if (echoDao.findMenuidLike(mMenuid) == 1) {
+                    iv_like.setBackgroundResource(R.drawable.dislike);
+                    menu.setLikes(menu.getLikes() - 1);
+                    echoDao.updateMenuidLike(mMenuid, 0);
+                    MyApplication.showToast("喜欢人数:" + menu.getLikes());
+                } else {
+                    iv_like.setBackgroundResource(R.drawable.like);
+                    //判断不喜欢的状态，为true变成false
                     if (echoDao.findMenuidNotLike(mMenuid) == 1) {
                         iv_dislike.setBackgroundResource(R.drawable.dislike);
-                        menu.setNotlikes(menu.getNotlikes()-1);
-                        echoDao.updateMenuidNotLike(mMenuid,0);
-                        MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
-                    }else {
-                        iv_dislike.setBackgroundResource(R.drawable.like);
-                        if(echoDao.findMenuidLike(mMenuid) == 1){
-                            iv_like.setBackgroundResource(R.drawable.dislike);
-                            echoDao.updateMenuidLike(mMenuid ,0);
-                            menu.setLikes(menu.getLikes()-1);
-                        }
-                        menu.setNotlikes(menu.getNotlikes()+1);
-                        echoDao.updateMenuidNotLike(mMenuid,1);
-                        MyApplication.showToast("不喜欢人数:"+menu.getNotlikes());
+                        echoDao.updateMenuidNotLike(mMenuid, 0);
+                        menu.setNotlikes(menu.getNotlikes() - 1);
                     }
+                    menu.setLikes(menu.getLikes() + 1);
+                    echoDao.updateMenuidLike(mMenuid, 1);
+                    MyApplication.showToast("喜欢人数:" + menu.getLikes());
                 }
-            });
+            }
+        });
+        ll_dislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (echoDao.findMenuidNotLike(mMenuid) == 1) {
+                    iv_dislike.setBackgroundResource(R.drawable.dislike);
+                    menu.setNotlikes(menu.getNotlikes() - 1);
+                    echoDao.updateMenuidNotLike(mMenuid, 0);
+                    MyApplication.showToast("不喜欢人数:" + menu.getNotlikes());
+                } else {
+                    iv_dislike.setBackgroundResource(R.drawable.like);
+                    if (echoDao.findMenuidLike(mMenuid) == 1) {
+                        iv_like.setBackgroundResource(R.drawable.dislike);
+                        echoDao.updateMenuidLike(mMenuid, 0);
+                        menu.setLikes(menu.getLikes() - 1);
+                    }
+                    menu.setNotlikes(menu.getNotlikes() + 1);
+                    echoDao.updateMenuidNotLike(mMenuid, 1);
+                    MyApplication.showToast("不喜欢人数:" + menu.getNotlikes());
+                }
+            }
+        });
         if (MyApplication.like) {
             try {
                 String jsonResult = GenerateJson.generateSupport(mMenuDetail.getMenu().getMenuid(), "yes");
@@ -185,7 +187,7 @@ public class three_Activity extends Activity {
                 e.printStackTrace();
             }
         }
-        if (MyApplication.dislike){
+        if (MyApplication.dislike) {
             try {
                 String jsonResult = GenerateJson.generateSupport(mMenuDetail.getMenu().getMenuid(), "no");
                 String httpResult = HttpUtils.doPost(MyApplication.pathMenuSupport, jsonResult);
@@ -198,12 +200,13 @@ public class three_Activity extends Activity {
             }
         }
     }
+
     /**
      * 第四个页面的数据
      */
 
     private void initCommentsData() {
-        if(IsInternet.isNetworkAvalible(getApplicationContext())){
+        if (IsInternet.isNetworkAvalible(getApplicationContext())) {
             new Thread() {
                 @Override
                 public void run() {
@@ -221,9 +224,9 @@ public class three_Activity extends Activity {
                     super.run();
                 }
             }.start();
-        }else{
+        } else {
             //访问不到网络异常
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
                     List<Comment> commentsList = mCommentsDao.findAll(mMenuid);
@@ -234,6 +237,7 @@ public class three_Activity extends Activity {
             }.start();
         }
     }
+
     private void initDate() {
         mCommentsDao = commentsDao.getInstanceComments(getApplicationContext());
         stepsList = MyApplication.getMenuDetail().getStepsList();
@@ -246,29 +250,13 @@ public class three_Activity extends Activity {
     private void intinUI() {
         tv_title = (TextView) findViewById(R.id.tv_title);
         dish_Img = (ImageView) findViewById(R.id.dish_Img);
-        dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(),three_Activity.this));
-        //TODO 待测试  给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
+        dish_Img.setBackgroundDrawable(getdrawable.getdrawable(menu.getSpic(), three_Activity.this));
+        // 给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
         dish_Img.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(three_Activity.this);
-                builder.setTitle("图片保存");
-                builder.setMessage("是否保存图片？");
-                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //保存图片操作
-                        String url=MyApplication.Http+menu.getSpic();
-                        DownPhotoUtil.donwloadImg(three_Activity.this,url);
-                    }
-                });
-                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //
-                    }
-                });
-                builder.show();
+                String url = MyApplication.Http + menu.getSpic();
+                SaveDrawableUtil.longPressClick(url, three_Activity.this);
                 return true;
             }
         });
@@ -292,7 +280,7 @@ public class three_Activity extends Activity {
             iv_like.setBackgroundResource(R.drawable.like);
             iv_dislike.setBackgroundResource(R.drawable.dislike);
         }
-        if (echoDao.findMenuidNotLike(mMenuid) == 1){
+        if (echoDao.findMenuidNotLike(mMenuid) == 1) {
             iv_like.setBackgroundResource(R.drawable.dislike);
             iv_dislike.setBackgroundResource(R.drawable.like);
         }
@@ -322,39 +310,23 @@ public class three_Activity extends Activity {
             ViewHolder holder = new ViewHolder();
             if (convertView == null) {
                 convertView = View.inflate(three_Activity.this, R.layout.setting_activity_view, null);
-                holder.stepTittle=convertView.findViewById(R.id.text1_tittle);
+                holder.stepTittle = convertView.findViewById(R.id.text1_tittle);
                 holder.stepTittle2 = convertView.findViewById(R.id.text2_tittle);
                 holder.step_Img = convertView.findViewById(R.id.step_Img);
-                holder.dish_time=convertView.findViewById(R.id.dish_time);
+                holder.dish_time = convertView.findViewById(R.id.dish_time);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.stepTittle.setText("步骤："+getItem(position).getStepid());
+            holder.stepTittle.setText("步骤：" + getItem(position).getStepid());
             holder.stepTittle2.setText(getItem(position).getDescription());
             holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(getItem(position).getPic(), three_Activity.this));
-            //TODO 待测试  给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
+            //给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
             holder.step_Img.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(three_Activity.this);
-                    builder.setTitle("图片保存");
-                    builder.setMessage("是否保存图片？");
-                    builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //保存图片操作
-                            String url=MyApplication.Http+getItem(position).getPic();
-                            DownPhotoUtil.donwloadImg(three_Activity.this,url);
-                        }
-                    });
-                    builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //
-                        }
-                    });
-                    builder.show();
+                    String url = MyApplication.Http + getItem(position).getPic();
+                    SaveDrawableUtil.longPressClick(url,three_Activity.this);
                     return true;
                 }
             });
