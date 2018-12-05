@@ -160,7 +160,7 @@ public class MenuActivity extends AppCompatActivity {
                         FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
                         //将菜谱列表页数据保存到数据库
                         menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
-                        instanceMenu.deleteMenuAll();
+                        instanceMenu.deleteMenu(typeid);
                         instanceMenu.insertMenuList(foodMenu.getMenuList());
                         MyApplication.setFoodMenu(foodMenu);
                         Message msg = new Message();
@@ -233,17 +233,13 @@ public class MenuActivity extends AppCompatActivity {
 
                 // 判断是否有网络连接
                 if (mNetworkAvalible) {
-                    SpUtil.putBoolean(getApplicationContext(), "NETPAGE" + position, mNetworkAvalible);
+                    SpUtil.putBoolean(getApplicationContext(), "NETPAGETWO" + position, mNetworkAvalible);
                     getMenuList(mTypesList.get(position).getTypeid());
-
-                } else if (SpUtil.getBoolean(getApplicationContext(), "NETPAGE" + position, false)) {
-                    Message msg = new Message();
-                    msg.what = MENULIST;
-                    mHandler.sendMessage(msg);
+                } else if (SpUtil.getBoolean(getApplicationContext(), "NETPAGETWO" + position, false)) {
+                   getMenuList(mTypesList.get(position).getTypeid());
                 } else {
                     MyApplication.showToast("无网络连接，请稍后重试!");
                 }
-
             }
         });
     }

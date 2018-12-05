@@ -22,7 +22,7 @@ public class MyApplication extends Application {
 
     public static boolean like = false;
     public static boolean dislike = false;
-
+    public static int numberFour;
     private static Comments comments;
     private static FoodMenu foodMenu;
     private static MenuDetail menuDetail;
