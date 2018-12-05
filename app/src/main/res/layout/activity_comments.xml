@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="20sp"
-                android:hint="清输入查询的城市"/>
+                android:hint="请输入您的评论"/>
 
             <Button
                 android:id="@+id/btn_send"
