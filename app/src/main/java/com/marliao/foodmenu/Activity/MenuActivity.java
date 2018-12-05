@@ -291,8 +291,16 @@ public class MenuActivity extends AppCompatActivity {
                 SaveDrawableUtil.putDrawable(getApplicationContext(),
                         getItem(position).getTypepic(), fileName);
             } else {
-                //从本地获取图片
-                Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
+                Bitmap bitmap;
+                //判断是否为第二张图片
+                if(position == 1){
+                    bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(),getItem(position-1).getTypename() + (position-1));
+                    System.out.println("fileName:"+getItem(position-1).getTypename() + (position-1));
+                }else{
+                    //从本地获取图片
+                    bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
+                    System.out.println("fileName:"+fileName);
+                }
                 holder.img.setImageBitmap(bitmap);
             }
             holder.Itext.setText(getItem(position).getTypename());
