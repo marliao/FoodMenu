@@ -307,7 +307,6 @@ public class MenuActivity extends AppCompatActivity {
                 holder.img.setImageBitmap(bitmap);
             }
             holder.Itext.setText(getItem(position).getTypename());
-
             //设置长按点击事件
             holder.img.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
