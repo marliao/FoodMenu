@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -54,6 +55,7 @@ public class vep_MenuActivity extends Activity {
     private TextView tv_title;
     private stepDao mStepDao;
     private List<Steps> stepList;
+    private MyAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,7 @@ public class vep_MenuActivity extends Activity {
     private void intiDate() {
         FoodMenu foodMenu = MyApplication.getFoodMenu();
         menuList = foodMenu.getMenuList();
-        final MyAdapter myAdapter = new MyAdapter();
+        myAdapter = new MyAdapter();
         green_name.setAdapter(myAdapter);
         //给条目设置一个点击事件
         green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -104,7 +106,7 @@ public class vep_MenuActivity extends Activity {
                                 String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
                                 MenuDetail menuDetail = ResolveJson.resolveMenuDetail(json);
                                 //将数据存入到数据库中
-                                int deleteAll = mStepDao.deleteStepAll();
+                                int deleteAll = mStepDao.deleteStep(menuid);
                                 System.out.println("清楚了"+deleteAll+"行");
                                 mStepDao.insertStepList(menuDetail.getStepsList());
                                 MyApplication.setMenuDetail(menuDetail);

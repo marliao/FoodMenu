@@ -26,19 +26,25 @@ import com.marliao.foodmenu.Utils.SaveDrawableUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.commentsDao;
+import com.marliao.foodmenu.db.dao.menuDao;
 import com.marliao.foodmenu.db.doman.Comment;
 import com.marliao.foodmenu.db.doman.Comments;
+import com.marliao.foodmenu.db.doman.Echo;
+import com.marliao.foodmenu.db.doman.FoodMenu;
 import com.marliao.foodmenu.db.doman.Menu;
 import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Steps;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class three_Activity extends Activity {
 
 
+    private static final int COMMENTDATA = 100;
+    private static final int COLLECTDATA = 101;
     private ImageView dish_Img;
     private TextView dish_name;
     private TextView dish_brief;
@@ -57,11 +63,19 @@ public class three_Activity extends Activity {
     private commentsDao mCommentsDao;
     private EchoDao echoDao;
     private int mMenuid;
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            //跳转评论页面
-            startActivity(new Intent(three_Activity.this, CommentsActivity.class));
+            switch (msg.what){
+                case COMMENTDATA:
+                    //跳转评论页面
+                    startActivity(new Intent(three_Activity.this, CommentsActivity.class));
+                    break;
+                case COLLECTDATA:
+                    FoodMenu foodMenu = (FoodMenu) msg.obj;
+                    MyApplication.setFoodMenu(foodMenu);
+                    break;
+            }
             super.handleMessage(msg);
         }
     };
@@ -117,8 +131,37 @@ public class three_Activity extends Activity {
                     iv_collect.setBackgroundResource(R.drawable.discollect);
                     echoDao.updateMenuidColleck(mMenuid, 0);
                 }
+                //TODO 更新收藏列表数据
+                prepareCollectData();
             }
         });
+    }
+
+    private void prepareCollectData() {
+        new Thread() {
+            @Override
+            public void run() {
+                EchoDao echoDao = EchoDao.getInstanceMenuDetail(three_Activity.this);
+                menuDao menuD = menuDao.getInstanceMenu(three_Activity.this);
+                List<Menu> menuList = new ArrayList<Menu>();
+                List<Echo> echoList = echoDao.findAll();
+                for (Echo echo : echoList) {
+                    if (echo.getIsColleck() == 1) {
+                        Menu menu = menuD.findByID(echo.getMenuid());
+                        menuList.add(menu);
+                    }
+                }
+                //获取foodmenu对象存入MyApplication 中
+                FoodMenu foodmenu = new FoodMenu();
+                foodmenu.setMenuList(menuList);
+                foodmenu.setResult("cellect");
+                Message msg = Message.obtain();
+                msg.what=COLLECTDATA;
+                msg.obj=foodmenu;
+                mHandler.sendMessage(msg);
+                super.run();
+            }
+        }.start();
     }
 
     private void initFootClick() {
@@ -219,9 +262,11 @@ public class three_Activity extends Activity {
                         //获取数据将数据存入到数 据库中
                         List<Comment> commentList = comments.getCommentList();
                         int deleteAll = mCommentsDao.deleteCommentsAll();
-                        System.out.println("删除了"+deleteAll+"行");
+                        System.out.println("删除了" + deleteAll + "行");
                         mCommentsDao.insertCommentList(commentList);
-                        mHandler.sendEmptyMessage(0);
+                        Message msg = Message.obtain();
+                        msg.what=COMMENTDATA;
+                        mHandler.sendMessage(msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -237,7 +282,9 @@ public class three_Activity extends Activity {
                     Comments comments = new Comments();
                     comments.setCommentList(commentsList);
                     MyApplication.setComments(comments);
-                    mHandler.sendEmptyMessage(0);
+                    Message msg = Message.obtain();
+                    msg.what=COMMENTDATA;
+                    mHandler.sendMessage(msg);
                 }
             }.start();
         }
@@ -325,14 +372,14 @@ public class three_Activity extends Activity {
             }
             holder.stepTittle.setText("步骤：" + getItem(position).getStepid());
             holder.stepTittle2.setText(getItem(position).getDescription());
-            String fileName = "stepData"+position;
+            String fileName = "stepData" + position;
             String spic = getItem(position).getPic();
-            if(IsInternet.isNetworkAvalible(getApplicationContext())){
+            if (IsInternet.isNetworkAvalible(getApplicationContext())) {
                 holder.step_Img.setBackgroundDrawable(getdrawable.getdrawable(spic, three_Activity.this));
                 //将图片本地化
                 SaveDrawableUtil.putDrawable(getApplicationContext(),
-                        spic,fileName);
-            }else{
+                        spic, fileName);
+            } else {
                 //从本地获取图片
                 Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
                 holder.step_Img.setImageBitmap(bitmap);
