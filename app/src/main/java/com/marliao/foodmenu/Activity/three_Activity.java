@@ -23,6 +23,7 @@ import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SaveDrawableUtil;
+import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.commentsDao;
@@ -79,6 +80,7 @@ public class three_Activity extends Activity {
             super.handleMessage(msg);
         }
     };
+    private boolean mNetworkAvalible;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -102,10 +104,17 @@ public class three_Activity extends Activity {
 
     private void initEcho() {
         echoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
-        //获取第二页给的menu对象
+        //获取第二页给的menu对象中的menuid
         menu = MyApplication.getMenuDetail().getMenu();
         mMenuid = menu.getMenuid();
-        echoDao.insertMenuid(mMenuid);
+        new Thread(){
+            public void run() {
+                Echo colleck = echoDao.findById(mMenuid);
+                if( colleck == null){
+                    echoDao.insertMenuid(mMenuid);
+                }
+            }
+        }.start();
     }
 
     private void initTilte() {
@@ -169,8 +178,19 @@ public class three_Activity extends Activity {
         ll_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //准备评 论页面的数据
-                initCommentsData();
+
+
+                mNetworkAvalible = IsInternet.isNetworkAvalible(three_Activity.this);
+                if(mNetworkAvalible){
+                    SpUtil.putBoolean(getApplicationContext(),"INTINETFOUR"+MyApplication.numberFour, mNetworkAvalible);
+                    //准备评 论页面的数据
+                    initCommentsData();
+                    }else if(SpUtil.getBoolean(getApplicationContext(),"INTINETFOUR"+MyApplication.numberFour,false)){
+                    //准备评 论页面的数据
+                    initCommentsData();
+                }else {
+                    MyApplication.showToast("无网络连接，请稍后重试!");
+                }
             }
         });
         //喜欢和不喜欢按钮的点击事件

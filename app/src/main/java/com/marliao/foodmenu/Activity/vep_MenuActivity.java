@@ -23,6 +23,7 @@ import com.marliao.foodmenu.Utils.HttpUtils;
 import com.marliao.foodmenu.Utils.IsInternet;
 import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SaveDrawableUtil;
+import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
 import com.marliao.foodmenu.db.dao.menuDao;
 import com.marliao.foodmenu.db.dao.stepDao;
@@ -56,6 +57,7 @@ public class vep_MenuActivity extends Activity {
     private stepDao mStepDao;
     private List<Steps> stepList;
     private MyAdapter myAdapter;
+    private boolean mNetworkAvalible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +77,17 @@ public class vep_MenuActivity extends Activity {
         String result = MyApplication.getFoodMenu().getResult();
         if (result.equals("cellect")) {
             tv_title.setText("收藏");
-            return;
         }else if(result.equals("menu")){
             int typeid = menuList.get(0).getTypeid();
             List<Types> typesList = MyApplication.getSort().getTypesList();
             String typename = typesList.get(typeid - 1).getTypename();
             tv_title.setText(typename);
+        }else{
+            int typeid = menuList.get(0).getTypeid();
+            List<Types> typesList = MyApplication.getSort().getTypesList();
+            String typename = typesList.get(typeid - 1).getTypename();
+            tv_title.setText(typename);
         }
-        int typeid = menuList.get(0).getTypeid();
-        List<Types> typesList = MyApplication.getSort().getTypesList();
-        String typename = typesList.get(typeid - 1).getTypename();
-        tv_title.setText(typename);
     }
 
     private void intiDate() {
@@ -97,44 +99,18 @@ public class vep_MenuActivity extends Activity {
         green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                if (IsInternet.isNetworkAvalible(getApplicationContext())) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                int menuid = menuList.get(position).getMenuid();
-                                String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
-                                MenuDetail menuDetail = ResolveJson.resolveMenuDetail(json);
-                                //将数据存入到数据库中
-                                int deleteAll = mStepDao.deleteStep(menuid);
-                                System.out.println("清楚了"+deleteAll+"行");
-                                mStepDao.insertStepList(menuDetail.getStepsList());
-                                MyApplication.setMenuDetail(menuDetail);
-                                System.out.println("第一个条目可以在子线程中点击");
-                                handler.sendEmptyMessage(0);
-                            } catch (JSONException e) {
-                                System.out.println("发生了异常");
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();
-                } else {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            //获取当前点击的menu数据
-                            Menu menu = menuList.get(position);
-                            stepList = mStepDao.findAll(menu.getMenuid());
-                            //创建一个MenuDetail对象存入数据
-                            MenuDetail detail = new MenuDetail();
-                            detail.setMenu(menu);
-                            detail.setStepsList(stepList);
-                            MyApplication.setMenuDetail(detail);
-                            handler.sendEmptyMessage(0);
-                            System.out.println("menu对象数据为:-----------------------" + menu);
-                        }
-                    }.start();
+                mNetworkAvalible = IsInternet.isNetworkAvalible(getApplicationContext());
+                if(mNetworkAvalible){
+                    MyApplication.numberFour=position;
+                    SpUtil.putBoolean(getApplicationContext(),"INTINETTHREE"+position, mNetworkAvalible);
+                    intiNetTwo(position);
+                }else if(SpUtil.getBoolean(getApplicationContext(),"INTINETTHREE"+position,false)){
+                    MyApplication.numberFour=position;
+                    intiNetTwo(position);
+                }else {
+                    MyApplication.showToast("无网络连接，请稍后重试!");
                 }
+
             }
         });
 
@@ -157,6 +133,47 @@ public class vep_MenuActivity extends Activity {
 
             }
         });
+    }
+
+    private void intiNetTwo(final int position) {
+        if (IsInternet.isNetworkAvalible(getApplicationContext())) {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        int menuid = menuList.get(position).getMenuid();
+                        String json = HttpUtils.doPost(MyApplication.pathMenuDetail, GenerateJson.generatemenuDetail(menuid));
+                        MenuDetail menuDetail = ResolveJson.resolveMenuDetail(json);
+                        //将数据存入到数据库中
+                        int deleteAll = mStepDao.deleteStep(menuid);
+                        System.out.println("清楚了"+deleteAll+"行");
+                        mStepDao.insertStepList(menuDetail.getStepsList());
+                        MyApplication.setMenuDetail(menuDetail);
+                        System.out.println("第一个条目可以在子线程中点击");
+                        handler.sendEmptyMessage(0);
+                    } catch (JSONException e) {
+                        System.out.println("发生了异常");
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    //获取当前点击的menu数据
+                    Menu menu = menuList.get(position);
+                    stepList = mStepDao.findAll(menu.getMenuid());
+                    //创建一个MenuDetail对象存入数据
+                    MenuDetail detail = new MenuDetail();
+                    detail.setMenu(menu);
+                    detail.setStepsList(stepList);
+                    MyApplication.setMenuDetail(detail);
+                    handler.sendEmptyMessage(0);
+                    System.out.println("menu对象数据为:-----------------------" + menu);
+                }
+            }.start();
+        }
     }
 
 
