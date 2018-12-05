@@ -94,7 +94,7 @@ public class vep_MenuActivity extends Activity {
     }
 
     private void intiDate() {
-        //获取数 据
+        //获取数据
         mEchoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
         menuDao mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
         FoodMenu foodMenu = MyApplication.getFoodMenu();
@@ -168,7 +168,7 @@ public class vep_MenuActivity extends Activity {
                         MyApplication.setMenuDetail(detail);
                         handler.sendEmptyMessage(0);
                     }else{
-                        MyApplication.showToast("此页面没有数据");
+                        MyApplication.showToast("未联网,此菜谱无法显示数据");
                     }
                     System.out.println("menu对象数据为:-----------------------" + menu);
                 }

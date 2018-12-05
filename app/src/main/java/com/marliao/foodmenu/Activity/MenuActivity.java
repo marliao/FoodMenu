@@ -110,13 +110,14 @@ public class MenuActivity extends AppCompatActivity {
                 menuDao menuD = menuDao.getInstanceMenu(getApplicationContext());
                 List<Menu> menuList = new ArrayList<Menu>();
                 List<Echo> echoList = echoDao.findAll();
-                for (Echo echo : echoList) {
-                    if (echo.getIsColleck() == 1) {
-                        Menu menu = menuD.findByID(echo.getMenuid());
-                        menuList.add(menu);
+                if(echoList != null){
+                    for (Echo echo : echoList) {
+                        if (echo.getIsColleck() == 1) {
+                            Menu menu = menuD.findByID(echo.getMenuid());
+                            menuList.add(menu);
+                        }
                     }
                 }
-                System.out.println(menuList.toString());
                 //获取foodmenu对象存入MyApplication 中
                 FoodMenu foodmenu = new FoodMenu();
                 foodmenu.setMenuList(menuList);
@@ -217,6 +218,9 @@ public class MenuActivity extends AppCompatActivity {
                 public void run() {
                     categoryTypeDao categoryType = categoryTypeDao.getInstanceCategoryType(MenuActivity.this);
                     mTypesList = categoryType.findAll();
+                    Sort sort = new Sort();
+                    sort.setTypesList(mTypesList);
+                    MyApplication.setSort(sort);
                     Message msg = new Message();
                     msg.what = DATA;
                     mHandler.sendMessage(msg);
