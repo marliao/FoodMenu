@@ -78,11 +78,6 @@ public class MenuActivity extends AppCompatActivity {
         initData();
         //扩展点击功能
         initCellect();
-        // 实现首页图片轮播功能
-        initHomePage();
-    }
-
-    private void initHomePage() {
 
     }
 
@@ -159,7 +154,7 @@ public class MenuActivity extends AppCompatActivity {
                         String menusResult = GenerateJson.generateMenus(typeid);
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuMenus, menusResult);
                         FoodMenu foodMenu = ResolveJson.resolveFoodMenu(httpResult);
-                        //将菜谱列表页数据保存到数据库
+                        //将菜谱列表页数据 保存到数据库
                         menuDao instanceMenu = menuDao.getInstanceMenu(MenuActivity.this);
                         instanceMenu.deleteMenu(typeid);
                         instanceMenu.insertMenuList(foodMenu.getMenuList());

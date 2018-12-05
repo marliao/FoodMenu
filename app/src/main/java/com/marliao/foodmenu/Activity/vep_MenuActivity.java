@@ -94,7 +94,7 @@ public class vep_MenuActivity extends Activity {
     }
 
     private void intiDate() {
-        //获取数据
+        //获取数 据
         mEchoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
         menuDao mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
         FoodMenu foodMenu = MyApplication.getFoodMenu();
