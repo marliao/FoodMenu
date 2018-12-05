@@ -85,10 +85,10 @@ public class menuDao {
         sdb.close();
         return (int) flag;
     };
-    public List<Menu> findAll(){
+    public List<Menu> findAll(Integer typeid){
         List<Menu> list = null;
         SQLiteDatabase db = sdb.getWritableDatabase();
-        Cursor cursor = db.query("menu", null, null, null, null, null, null);
+        Cursor cursor = db.query("menu", null, "typeid=?", new String[]{typeid + ""}, null, null, null);
         while(cursor.moveToNext()){
             if(list == null)list = new ArrayList<Menu>();
             Menu menu = new Menu();

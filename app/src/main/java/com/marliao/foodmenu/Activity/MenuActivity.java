@@ -68,6 +68,7 @@ public class MenuActivity extends AppCompatActivity {
     private Button bt_function;
     private ImageView img_one;
     private menuDao mMenuDao;
+    private int mTypeid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +179,7 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
-                    List<Menu> menuList = mMenuDao.findAll();
+                    List<Menu> menuList = mMenuDao.findAll(mTypeid);
                     System.out.println(menuList);
                     FoodMenu foodMenu = new FoodMenu();
                     foodMenu.setMenuList(menuList);
@@ -237,7 +238,7 @@ public class MenuActivity extends AppCompatActivity {
         menu_one.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                mTypeid =mTypesList.get(position).getTypeid();
                 // 判断是否有网络连接
                 if (mNetworkAvalible) {
                     SpUtil.putBoolean(getApplicationContext(), "NETPAGETWO" + position, mNetworkAvalible);
