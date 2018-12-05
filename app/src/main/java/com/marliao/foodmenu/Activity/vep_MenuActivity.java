@@ -45,13 +45,22 @@ import java.util.List;
 public class vep_MenuActivity extends Activity {
 
     private static final String TAG = "vep_MenuActivity";
+    private static final int NETTWO = 100;
+    private static final int TOAST = 101;
     private ListView green_name;
     private List<Menu> menuList;
     private int menuCount = 10;
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            startActivity(new Intent(getApplicationContext(), three_Activity.class));
+            switch (msg.what) {
+                case NETTWO:
+                    startActivity(new Intent(getApplicationContext(), three_Activity.class));
+                    break;
+                case TOAST:
+                    MyApplication.showToast("未联网，请连接网络！");
+                    break;
+            }
         }
     };
     private menuDao mMenuDao;
@@ -80,12 +89,12 @@ public class vep_MenuActivity extends Activity {
         String result = MyApplication.getFoodMenu().getResult();
         if (result.equals("cellect")) {
             tv_title.setText("收藏");
-        }else if(result.equals("menu")){
+        } else if (result.equals("menu")) {
             int typeid = menuList.get(0).getTypeid();
             List<Types> typesList = MyApplication.getSort().getTypesList();
             String typename = typesList.get(typeid - 1).getTypename();
             tv_title.setText(typename);
-        }else{
+        } else {
             int typeid = menuList.get(0).getTypeid();
             List<Types> typesList = MyApplication.getSort().getTypesList();
             String typename = typesList.get(typeid - 1).getTypename();
@@ -142,10 +151,13 @@ public class vep_MenuActivity extends Activity {
                         MenuDetail menuDetail = ResolveJson.resolveMenuDetail(json);
                         //将数据存入到数据库中
                         int deleteAll = mStepDao.deleteStep(menuid);
-                        System.out.println("清楚了"+deleteAll+"行");
+                        System.out.println("清楚了" + deleteAll + "行");
                         mStepDao.insertStepList(menuDetail.getStepsList());
                         MyApplication.setMenuDetail(menuDetail);
                         System.out.println("第一个条目可以在子线程中点击");
+                        Message msg = new Message();
+                        msg.what = NETTWO;
+                        handler.sendMessage(msg);
                         handler.sendEmptyMessage(0);
                     } catch (JSONException e) {
                         System.out.println("发生了异常");
@@ -161,14 +173,18 @@ public class vep_MenuActivity extends Activity {
                     Menu menu = menuList.get(position);
                     stepList = mStepDao.findAll(menu.getMenuid());
                     //创建一个MenuDetail对象存入数据
-                    if(stepList !=null){
+                    if (stepList != null) {
                         MenuDetail detail = new MenuDetail();
                         detail.setMenu(menu);
                         detail.setStepsList(stepList);
                         MyApplication.setMenuDetail(detail);
-                        handler.sendEmptyMessage(0);
-                    }else{
-                        MyApplication.showToast("未联网,此菜谱无法显示数据");
+                        Message msg = new Message();
+                        msg.what = NETTWO;
+                        handler.sendMessage(msg);
+                    } else {
+                        Message msg = new Message();
+                        msg.what = TOAST;
+                        handler.sendMessage(msg);
                     }
                     System.out.println("menu对象数据为:-----------------------" + menu);
                 }
@@ -215,19 +231,19 @@ public class vep_MenuActivity extends Activity {
             Menu item = getItem(position);
             holder.menu_name.setText(item.getMenuname());
             String spic = item.getSpic();
-            String fileName = item.getMenuname()+position;
+            String fileName = item.getMenuname() + position;
             Bitmap bitmap = null;
-            if(IsInternet.isNetworkAvalible(getApplicationContext())) {
+            if (IsInternet.isNetworkAvalible(getApplicationContext())) {
                 holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic, vep_MenuActivity.this));
                 //将图片本地化
                 SaveDrawableUtil.putDrawable(getApplicationContext(),
                         spic, fileName);
-            }else if(MyApplication.getFoodMenu().getResult().equals("cellect")){
+            } else if (MyApplication.getFoodMenu().getResult().equals("cellect")) {
                 int menuid = item.getMenuid();
                 Menu menu = mMenuDao.findByID(menuid);
-                fileName = menu.getMenuname()+(menuid-1);
+                fileName = menu.getMenuname() + (menuid - 1);
                 bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
-            }else{
+            } else {
                 //从本地获取图片
                 bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
             }
