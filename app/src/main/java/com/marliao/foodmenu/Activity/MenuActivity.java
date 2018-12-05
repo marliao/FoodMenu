@@ -41,11 +41,15 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MenuActivity extends AppCompatActivity {
 
     private static final int DATA = 100;
     private static final int MENULIST = 101;
+    private static final int WHAT_TMP_CAROUSEL = 102;
+    private int TMP_CAROUSEL = 0;
     private GridView menu_one;
     private List<Types> mTypesList;
     private boolean mNetworkAvalible;
@@ -60,6 +64,12 @@ public class MenuActivity extends AppCompatActivity {
                 case MENULIST:
                     startActivity(new Intent(MenuActivity.this, vep_MenuActivity.class));
                     break;
+                case WHAT_TMP_CAROUSEL:
+                    img_one.setBackgroundResource(ints[TMP_CAROUSEL++]);
+                    if(TMP_CAROUSEL == ints.length){
+                        TMP_CAROUSEL = 0;
+                    }
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -69,6 +79,7 @@ public class MenuActivity extends AppCompatActivity {
     private ImageView img_one;
     private menuDao mMenuDao;
     private int mTypeid;
+    private int[] ints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +89,22 @@ public class MenuActivity extends AppCompatActivity {
         initData();
         //扩展点击功能
         initCellect();
+        //实现图片轮播
+        initDrawable();
+    }
 
+    private void initDrawable() {
+        img_one = (ImageView) findViewById(R.id.img_one);
+        ints = new int[]{R.drawable.beauty,R.drawable.banner};
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Message obtain = Message.obtain();
+                obtain.what =  WHAT_TMP_CAROUSEL;
+                mHandler.sendMessage(obtain);
+            }
+        }, 3000, 3000);
     }
 
     private void initCellect() {
