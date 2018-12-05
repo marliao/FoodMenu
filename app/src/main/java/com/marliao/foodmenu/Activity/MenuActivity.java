@@ -165,6 +165,7 @@ public class MenuActivity extends AppCompatActivity {
                         MyApplication.setFoodMenu(foodMenu);
                         Message msg = new Message();
                         msg.what = MENULIST;
+                        System.out.println("第二面数据有网络状态执行了");
                         mHandler.sendMessage(msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -173,16 +174,22 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }.start();
         } else {
-            mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
-            List<Menu> menuList = mMenuDao.findAll();
-            System.out.println(menuList);
-            FoodMenu foodMenu = new FoodMenu();
-            foodMenu.setMenuList(menuList);
-            foodMenu.setResult("menu");
-            MyApplication.setFoodMenu(foodMenu);
-            Message msg = new Message();
-            msg.what = MENULIST;
-            mHandler.sendMessage(msg);
+            new Thread(){
+                @Override
+                public void run() {
+                    mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
+                    List<Menu> menuList = mMenuDao.findAll();
+                    System.out.println(menuList);
+                    FoodMenu foodMenu = new FoodMenu();
+                    foodMenu.setMenuList(menuList);
+                    foodMenu.setResult("menu");
+                    System.out.println("第二面数据无网络状态执行了");
+                    MyApplication.setFoodMenu(foodMenu);
+                    Message msg = new Message();
+                    msg.what = MENULIST;
+                    mHandler.sendMessage(msg);
+                }
+            }.start();
         }
     }
 
