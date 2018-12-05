@@ -58,9 +58,9 @@ public class stepDao {
         }
         sdb.close();
     };
-    public int deleteStep(Integer id){
+    public int deleteStep(Integer menuid){
         SQLiteDatabase db = sdb.getWritableDatabase();
-        long flag = db.delete("step","stepid=?",new String[]{String.valueOf(id)});
+        long flag = db.delete("step","stepid=?",new String[]{String.valueOf(menuid)});
         sdb.close();
         return (int) flag;
     };
