@@ -81,7 +81,6 @@ public class three_Activity extends Activity {
         }
     };
     private boolean mNetworkAvalible;
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
