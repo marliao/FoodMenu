@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marliao.foodmenu.Application.MyApplication;
 import com.marliao.foodmenu.R;
@@ -25,6 +26,7 @@ import com.marliao.foodmenu.Utils.ResolveJson;
 import com.marliao.foodmenu.Utils.SaveDrawableUtil;
 import com.marliao.foodmenu.Utils.SpUtil;
 import com.marliao.foodmenu.Utils.getdrawable;
+import com.marliao.foodmenu.db.dao.EchoDao;
 import com.marliao.foodmenu.db.dao.menuDao;
 import com.marliao.foodmenu.db.dao.stepDao;
 import com.marliao.foodmenu.db.doman.FoodMenu;
@@ -58,6 +60,7 @@ public class vep_MenuActivity extends Activity {
     private List<Steps> stepList;
     private MyAdapter myAdapter;
     private boolean mNetworkAvalible;
+    private EchoDao mEchoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,26 +94,19 @@ public class vep_MenuActivity extends Activity {
     }
 
     private void intiDate() {
+        //获取数据
+        mEchoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
+        menuDao mMenuDao = menuDao.getInstanceMenu(getApplicationContext());
         FoodMenu foodMenu = MyApplication.getFoodMenu();
         menuList = foodMenu.getMenuList();
         myAdapter = new MyAdapter();
+
         green_name.setAdapter(myAdapter);
         //给条目设置一个点击事件
         green_name.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                mNetworkAvalible = IsInternet.isNetworkAvalible(getApplicationContext());
-                if(mNetworkAvalible){
-                    MyApplication.numberFour=position;
-                    SpUtil.putBoolean(getApplicationContext(),"INTINETTHREE"+position, mNetworkAvalible);
-                    intiNetTwo(position);
-                }else if(SpUtil.getBoolean(getApplicationContext(),"INTINETTHREE"+position,false)){
-                    MyApplication.numberFour=position;
-                    intiNetTwo(position);
-                }else {
-                    MyApplication.showToast("无网络连接，请稍后重试!");
-                }
-
+                intiNetTwo(position);
             }
         });
 
@@ -165,11 +161,15 @@ public class vep_MenuActivity extends Activity {
                     Menu menu = menuList.get(position);
                     stepList = mStepDao.findAll(menu.getMenuid());
                     //创建一个MenuDetail对象存入数据
-                    MenuDetail detail = new MenuDetail();
-                    detail.setMenu(menu);
-                    detail.setStepsList(stepList);
-                    MyApplication.setMenuDetail(detail);
-                    handler.sendEmptyMessage(0);
+                    if(stepList !=null){
+                        MenuDetail detail = new MenuDetail();
+                        detail.setMenu(menu);
+                        detail.setStepsList(stepList);
+                        MyApplication.setMenuDetail(detail);
+                        handler.sendEmptyMessage(0);
+                    }else{
+                        MyApplication.showToast("此页面没有数据");
+                    }
                     System.out.println("menu对象数据为:-----------------------" + menu);
                 }
             }.start();
@@ -216,16 +216,22 @@ public class vep_MenuActivity extends Activity {
             holder.menu_name.setText(item.getMenuname());
             String spic = item.getSpic();
             String fileName = item.getMenuname()+position;
-            if(IsInternet.isNetworkAvalible(getApplicationContext())){
+            Bitmap bitmap = null;
+            if(IsInternet.isNetworkAvalible(getApplicationContext())) {
                 holder.img1.setBackgroundDrawable(getdrawable.getdrawable(spic, vep_MenuActivity.this));
                 //将图片本地化
                 SaveDrawableUtil.putDrawable(getApplicationContext(),
-                        spic,fileName);
+                        spic, fileName);
+            }else if(MyApplication.getFoodMenu().getResult().equals("cellect")){
+                int menuid = item.getMenuid();
+                Menu menu = mMenuDao.findByID(menuid);
+                fileName = menu.getMenuname()+(menuid-1);
+                bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
             }else{
                 //从本地获取图片
-                Bitmap bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
-                holder.img1.setImageBitmap(bitmap);
+                bitmap = SaveDrawableUtil.getDrawable(getApplicationContext(), fileName);
             }
+            holder.img1.setImageBitmap(bitmap);
             holder.img1.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
