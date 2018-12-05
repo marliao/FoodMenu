@@ -43,6 +43,7 @@ public class EchoDao {
             return cursor.getInt(0);
         }
         db.close();
+        cursor.close();
         return 0;
     }
     public int updateMenuidLike(Integer menuid ,Integer isLike){
@@ -53,6 +54,18 @@ public class EchoDao {
         db.close();
         return rs;
     }
+    public Echo findById(Integer menuid){
+        SQLiteDatabase db = sdb.getWritableDatabase();
+        Cursor cursor = db.query("echo", null, "menuid=?", new String[]{menuid + ""}, null, null, null);
+        Echo echo = null;
+        if(cursor.moveToNext()){
+            echo = new Echo(cursor.getInt(0),cursor.getInt(1),
+                    cursor.getInt(2),cursor.getInt(3));
+        }
+        db.close();
+        cursor.close();
+        return echo;
+    }
 
     public int findMenuidNotLike(Integer menuid){
         SQLiteDatabase db = sdb.getWritableDatabase();
@@ -61,6 +74,7 @@ public class EchoDao {
             return cursor.getInt(0);
         }
         db.close();
+        cursor.close();
         return 0;
     }
     public int updateMenuidNotLike(Integer menuid,Integer isNotLike){
@@ -78,6 +92,7 @@ public class EchoDao {
             return cursor.getInt(0);
         }
         db.close();
+        cursor.close();
         return 0;
     }
     public int updateMenuidColleck(Integer menuid,Integer IsColleck){
@@ -100,6 +115,7 @@ public class EchoDao {
             list.add(echo);
         }
         db.close();
+        cursor.close();
         return list;
     }
 }

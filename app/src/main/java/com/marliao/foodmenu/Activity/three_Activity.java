@@ -101,11 +101,18 @@ public class three_Activity extends Activity {
     }
 
     private void initEcho() {
-        echoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
-        //获取第二页给的menu对象
-        menu = MyApplication.getMenuDetail().getMenu();
-        mMenuid = menu.getMenuid();
-        echoDao.insertMenuid(mMenuid);
+        new Thread(){
+            public void run() {
+                echoDao = EchoDao.getInstanceMenuDetail(getApplicationContext());
+                //获取第二页给的menu对象中的menuid
+                menu = MyApplication.getMenuDetail().getMenu();
+                mMenuid = menu.getMenuid();
+                Echo colleck = echoDao.findById(mMenuid);
+                if( colleck == null){
+                    echoDao.insertMenuid(mMenuid);
+                }
+            }
+        }.start();
     }
 
     private void initTilte() {
