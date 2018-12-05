@@ -88,6 +88,7 @@ public class MenuActivity extends AppCompatActivity {
         bt_cellect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MyApplication.iscollect=true;
                 prepareData();
             }
         });
@@ -160,6 +161,7 @@ public class MenuActivity extends AppCompatActivity {
                         instanceMenu.deleteMenu(typeid);
                         instanceMenu.insertMenuList(foodMenu.getMenuList());
                         MyApplication.setFoodMenu(foodMenu);
+                        MyApplication.iscollect=false;
                         Message msg = new Message();
                         msg.what = MENULIST;
                         System.out.println("第二面数据有网络状态执行了");
@@ -180,6 +182,7 @@ public class MenuActivity extends AppCompatActivity {
                     FoodMenu foodMenu = new FoodMenu();
                     foodMenu.setMenuList(menuList);
                     foodMenu.setResult("menu");
+                    MyApplication.iscollect=false;
                     System.out.println("第二面数据无网络状态执行了");
                     MyApplication.setFoodMenu(foodMenu);
                     Message msg = new Message();

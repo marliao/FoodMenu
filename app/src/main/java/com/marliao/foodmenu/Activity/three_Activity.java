@@ -139,8 +139,10 @@ public class three_Activity extends Activity {
                     iv_collect.setBackgroundResource(R.drawable.discollect);
                     echoDao.updateMenuidColleck(mMenuid, 0);
                 }
-                //TODO 更新收藏列表数据
-                prepareCollectData();
+                if (MyApplication.iscollect) {
+                    //更新收藏列表数据
+                    prepareCollectData();
+                }
             }
         });
     }

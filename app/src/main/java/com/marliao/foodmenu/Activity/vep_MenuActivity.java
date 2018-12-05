@@ -83,6 +83,16 @@ public class vep_MenuActivity extends Activity {
 
     }
 
+    @Override
+    protected void onStart() {
+        intiDate();
+        InitTitle();
+        if (myAdapter != null) {
+            myAdapter.notifyDataSetChanged();
+        }
+        super.onStart();
+    }
+
     // 通过id给标题进行设置
     private void InitTitle() {
         tv_title = (TextView) findViewById(R.id.tv_title);
