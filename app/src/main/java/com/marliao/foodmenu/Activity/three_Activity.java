@@ -278,12 +278,14 @@ public class three_Activity extends Activity {
                         String jsonResult = GenerateJson.generateComment(mMenuDetail.getMenu().getMenuid());
                         String httpResult = HttpUtils.doPost(MyApplication.pathMenuComments, jsonResult);
                         Comments comments = ResolveJson.resolveComments(httpResult);
-                        MyApplication.setComments(comments);
-                        //获取数据将数据存入到数 据库中
-                        List<Comment> commentList = comments.getCommentList();
-                        int deleteAll = mCommentsDao.deleteCommentsAll();
-                        System.out.println("删除了" + deleteAll + "行");
-                        mCommentsDao.insertCommentList(commentList);
+                        if (comments!=null) {
+                            MyApplication.setComments(comments);
+                            //获取数据将数据存入到数 据库中
+                            List<Comment> commentList = comments.getCommentList();
+                            int deleteAll = mCommentsDao.deleteCommentsAll();
+                            System.out.println("删除了" + deleteAll + "行");
+                            mCommentsDao.insertCommentList(commentList);
+                        }
                         Message msg = Message.obtain();
                         msg.what=COMMENTDATA;
                         mHandler.sendMessage(msg);
