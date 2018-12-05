@@ -77,7 +77,7 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
         //初始化控件
         initUI();
-        //初始化数据
+        //初始 化数据
         initData();
         //发送评 论
         sendComment();

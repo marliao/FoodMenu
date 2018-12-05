@@ -123,7 +123,7 @@ public class ResolveJson {
     }
 
     /**
-     * 解析用户 评论的工具类
+     * 解析用户 评论 的工具类
      *
      * @param jsonStr
      * @return
