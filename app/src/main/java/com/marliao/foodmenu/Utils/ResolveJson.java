@@ -132,7 +132,11 @@ public class ResolveJson {
     public static Comments resolveComments(String jsonStr) throws JSONException {
         Comments comments = new Comments();
         JSONObject jsonObject = new JSONObject(jsonStr);
-        comments.setResult(jsonObject.getString("result"));
+        String result = jsonObject.getString("result");
+        if (result.equals("failed")) {
+            return null;
+        }
+        comments.setResult(result);
         JSONArray jsonComment = jsonObject.getJSONArray("comments");
         List<Comment> commentList = new ArrayList<>();
         for (int i = 0; i < jsonComment.length(); i++) {

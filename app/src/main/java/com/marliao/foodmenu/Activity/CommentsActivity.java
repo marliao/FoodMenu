@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,7 +29,9 @@ import com.marliao.foodmenu.db.doman.MenuDetail;
 import com.marliao.foodmenu.db.doman.Ptime;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsActivity extends AppCompatActivity {
@@ -68,6 +71,7 @@ public class CommentsActivity extends AppCompatActivity {
             super.handleMessage(msg);
         }
     };
+    private Comments comments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +86,15 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        Comments comments = MyApplication.getComments();
-        mCommentList = comments.getCommentList();
         MenuDetail menuDetail = MyApplication.getMenuDetail();
         mMenu = menuDetail.getMenu();
+        comments = MyApplication.getComments();
+        if (comments==null){
+            //给集合设置默认值
+            getData();
+        }else {
+            mCommentList = comments.getCommentList();
+        }
         tv_food_comments.setText(mMenu.getMenuname() + "的评论");
         iv_food_image.setBackgroundDrawable(getdrawable.getdrawable(mMenu.getSpic(), CommentsActivity.this));
         //给图片设置长按点击事件，长按弹出对话框，确定则保存图片到本地
@@ -101,6 +110,29 @@ public class CommentsActivity extends AppCompatActivity {
         msg.what = DATA;
         mHandler.sendMessage(msg);
 
+    }
+
+    private void getData() {
+        Comment comment = new Comment();
+        comment.setMenuid(mMenu.getMenuid());
+        comment.setRegion("安徽六安");
+        comment.setContent("太好吃了");
+        comment.setCid(1);
+        Ptime ptime = new Ptime();
+        ptime.setDate("3");
+        ptime.setHours("23");
+        ptime.setSeconds("47");
+        ptime.setMonth("3");
+        ptime.setNanos("0");
+        ptime.setTimezoneOffset("-480");
+        ptime.setYear("114");
+        ptime.setMinutes("38");
+        ptime.setTime("1396539527000");
+        ptime.setDay("4");
+        comment.setPtime(ptime);
+        List<Comment> commentsList=new ArrayList<>();
+        commentsList.add(comment);
+        mCommentList=commentsList;
     }
 
     private void sendComment() {
